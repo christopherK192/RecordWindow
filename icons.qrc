@@ -1,13 +1,13 @@
 <RCC>
-    <qresource prefix="icons/">
-        <file>record.svg</file>
-        <file>logo.ico</file>
-        <file>playVideo.svg</file>
-        <file>stopVideo.svg</file>
-        <file>options.svg</file>
-        <file>exitProgram.svg</file>
-        <file>check.svg</file>
-        <file>german.svg</file>
-        <file>english.svg</file>
+    <qresource prefix="icons">
+        <file>icons/record.svg</file>
+        <file>icons/logo.ico</file>
+        <file>icons/playVideo.svg</file>
+        <file>icons/stopVideo.svg</file>
+        <file>icons/options.svg</file>
+        <file>icons/exitProgram.svg</file>
+        <file>icons/check.svg</file>
+        <file>icons/german.svg</file>
+        <file>icons/english.svg</file>
     </qresource>
 </RCC>
