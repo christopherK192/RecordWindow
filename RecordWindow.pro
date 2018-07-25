@@ -23,20 +23,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
-        recordwindow.cpp \
-    settingdialog.cpp
+        src/main.cpp \
+        src/recordwindow.cpp \
+    src/settingdialog.cpp
 
 HEADERS += \
-        recordwindow.h \
-    settingdialog.h
+        include/recordwindow.h \
+    include/settingdialog.h
 
 FORMS += \
-        recordwindow.ui \
-    settingdialog.ui
+        resource/recordwindow.ui \
+    resource/settingdialog.ui
 
 RESOURCES += \
-    Icons.qrc
+    icons.qrc
 
 RC_FILE += \
     icon.rc
