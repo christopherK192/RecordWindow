@@ -1,4 +1,4 @@
-#include "settingdialog.h"
+#include "include/settingdialog.h"
 #include "ui_settingdialog.h"
 
 /*!

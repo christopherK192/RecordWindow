@@ -1,4 +1,4 @@
-#include "recordwindow.h"
+#include "include/recordwindow.h"
 #include <QApplication>
 
 

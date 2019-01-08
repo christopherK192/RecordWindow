@@ -25,7 +25,7 @@
    <string>IVR-Record App</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset>
     <normaloff>:/Icons/logo.ico</normaloff>:/Icons/logo.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -109,7 +109,7 @@
           </sizepolicy>
          </property>
          <property name="pixmap">
-          <pixmap resource="Icons.qrc">:/Icons/record.svg</pixmap>
+          <pixmap>:/Icons/record.svg</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -219,7 +219,7 @@
           <string> Start IVR</string>
          </property>
          <property name="icon">
-          <iconset resource="Icons.qrc">
+          <iconset>
            <normaloff>:/Icons/playVideo.svg</normaloff>:/Icons/playVideo.svg</iconset>
          </property>
          <property name="iconSize">
@@ -253,7 +253,7 @@
           <string> Stop IVR</string>
          </property>
          <property name="icon">
-          <iconset resource="Icons.qrc">
+          <iconset>
            <normaloff>:/Icons/stopVideo.svg</normaloff>:/Icons/stopVideo.svg</iconset>
          </property>
          <property name="iconSize">
@@ -368,7 +368,7 @@
      <x>0</x>
      <y>0</y>
      <width>351</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -397,7 +397,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="Icons.qrc">
+    <iconset>
      <normaloff>:/Icons/german.svg</normaloff>:/Icons/german.svg</iconset>
    </property>
    <property name="text">
@@ -411,7 +411,7 @@
   </action>
   <action name="actionEinstellungen">
    <property name="icon">
-    <iconset resource="Icons.qrc">
+    <iconset>
      <normaloff>:/Icons/options.svg</normaloff>:/Icons/options.svg</iconset>
    </property>
    <property name="text">
@@ -426,7 +426,7 @@
   </action>
   <action name="actionBeenden">
    <property name="icon">
-    <iconset resource="Icons.qrc">
+    <iconset>
      <normaloff>:/Icons/exitProgram.svg</normaloff>:/Icons/exitProgram.svg</iconset>
    </property>
    <property name="text">
@@ -441,7 +441,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="Icons.qrc">
+    <iconset>
      <normaloff>:/Icons/english.svg</normaloff>:/Icons/english.svg</iconset>
    </property>
    <property name="text">
@@ -450,8 +450,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

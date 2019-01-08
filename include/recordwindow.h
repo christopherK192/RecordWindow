@@ -13,7 +13,7 @@
 #include <Windows.h>
 //#include <QDebug>
 
-#include "settingdialog.h"
+#include "include/settingdialog.h"
 
 
 namespace Ui {
