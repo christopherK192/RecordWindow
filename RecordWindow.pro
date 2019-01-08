@@ -36,10 +36,7 @@ FORMS += \
     resource/settingdialog.ui
 
 RESOURCES += \
-    icons.qrc \
-    resource/Icons.qrc \
-    resource/Icons.qrc \
-    resource/Icons.qrc
+    icons.qrc
 
 RC_FILE += \
     icon.rc

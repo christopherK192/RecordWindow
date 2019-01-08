@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="playVideo.svg">
+   sodipodi:docname="checkOK.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,13 +26,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.2"
-     inkscape:cx="14.408332"
-     inkscape:cy="21.877076"
+     inkscape:cx="26.630631"
+     inkscape:cy="18.329014"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-to-guides="true"
-     inkscape:snap-grids="false"
+     inkscape:snap-grids="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
@@ -51,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,9 +61,9 @@
      id="layer1"
      transform="translate(0,-1002.3622)">
     <path
-       style="opacity:1;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:2.5999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 24.936873,1003.4706 a 23.937347,23.937347 0 0 0 -23.9198601,23.9487 23.937347,23.937347 0 0 0 23.9428681,23.9263 23.937347,23.937347 0 0 0 23.931631,-23.9375 l 0,-0.023 a 23.937347,23.937347 0 0 0 -23.954639,-23.9145 z m -5.678846,10.9018 18.73115,12.6264 -18.803387,12.4824 0.07224,-25.1088 z"
-       id="path4148"
-       inkscape:connector-curvature="0" />
+       style="opacity:1;fill:#008000;fill-opacity:1;stroke:none;stroke-width:2.5999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 25.001953 0.94140625 A 24.027342 24.027342 0 0 0 0.9921875 24.980469 A 24.027342 24.027342 0 0 0 25.025391 48.996094 A 24.027342 24.027342 0 0 0 49.046875 24.96875 L 49.046875 24.947266 A 24.027342 24.027342 0 0 0 25.001953 0.94140625 z M 36.042969 9.6015625 L 43.607422 16.142578 L 28.564453 33.541016 L 22.023438 41.105469 L 14.458984 34.564453 L 4.625 26.060547 L 11.166016 18.498047 L 21 27 L 36.042969 9.6015625 z "
+       transform="translate(0,1002.3622)"
+       id="path4201" />
   </g>
 </svg>

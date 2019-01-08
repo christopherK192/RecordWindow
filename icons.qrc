@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="icons">
+    <qresource prefix="/icons">
         <file>icons/record.svg</file>
         <file>icons/logo.ico</file>
         <file>icons/playVideo.svg</file>
@@ -9,5 +9,7 @@
         <file>icons/check.svg</file>
         <file>icons/german.svg</file>
         <file>icons/english.svg</file>
+        <file>icons/checkNO.svg</file>
+        <file>icons/checkOK.svg</file>
     </qresource>
 </RCC>

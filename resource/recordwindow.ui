@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>351</width>
-    <height>672</height>
+    <width>300</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,25 +25,19 @@
    <string>IVR-Record App</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/Icons/logo.ico</normaloff>:/Icons/logo.ico</iconset>
+   <iconset resource="../icons.qrc">
+    <normaloff>:/icons/icons/logo.ico</normaloff>:/icons/icons/logo.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QFrame" name="frame_3">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLabel" name="label">
          <property name="font">
           <font>
-           <pointsize>10</pointsize>
+           <pointsize>12</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -58,9 +52,12 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
+           <width>10</width>
            <height>20</height>
           </size>
          </property>
@@ -71,22 +68,6 @@
        </item>
       </layout>
      </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>10</width>
-        <height>10</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item>
      <widget class="QFrame" name="frame_recording">
@@ -109,7 +90,7 @@
           </sizepolicy>
          </property>
          <property name="pixmap">
-          <pixmap>:/Icons/record.svg</pixmap>
+          <pixmap resource="../icons.qrc">:/icons/icons/record.svg</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -126,7 +107,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>20</width>
+           <width>10</width>
            <height>20</height>
           </size>
          </property>
@@ -172,22 +153,6 @@
      </widget>
     </item>
     <item>
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>10</width>
-        <height>10</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
      <widget class="QFrame" name="frame_replay">
       <property name="frameShape">
        <enum>QFrame::Box</enum>
@@ -219,8 +184,8 @@
           <string> Start IVR</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>:/Icons/playVideo.svg</normaloff>:/Icons/playVideo.svg</iconset>
+          <iconset resource="../icons.qrc">
+           <normaloff>:/icons/icons/playVideo.svg</normaloff>:/icons/icons/playVideo.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -253,8 +218,8 @@
           <string> Stop IVR</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>:/Icons/stopVideo.svg</normaloff>:/Icons/stopVideo.svg</iconset>
+          <iconset resource="../icons.qrc">
+           <normaloff>:/icons/icons/stopVideo.svg</normaloff>:/icons/icons/stopVideo.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -288,22 +253,6 @@
        </item>
       </layout>
      </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_4">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>10</width>
-        <height>10</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
@@ -367,7 +316,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>351</width>
+     <width>300</width>
      <height>21</height>
     </rect>
    </property>
@@ -397,8 +346,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
-     <normaloff>:/Icons/german.svg</normaloff>:/Icons/german.svg</iconset>
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/icons/german.svg</normaloff>:/icons/icons/german.svg</iconset>
    </property>
    <property name="text">
     <string>Deutsch</string>
@@ -411,8 +360,8 @@
   </action>
   <action name="actionEinstellungen">
    <property name="icon">
-    <iconset>
-     <normaloff>:/Icons/options.svg</normaloff>:/Icons/options.svg</iconset>
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/icons/options.svg</normaloff>:/icons/icons/options.svg</iconset>
    </property>
    <property name="text">
     <string>Einstellungen</string>
@@ -426,8 +375,8 @@
   </action>
   <action name="actionBeenden">
    <property name="icon">
-    <iconset>
-     <normaloff>:/Icons/exitProgram.svg</normaloff>:/Icons/exitProgram.svg</iconset>
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/icons/exitProgram.svg</normaloff>:/icons/icons/exitProgram.svg</iconset>
    </property>
    <property name="text">
     <string>Beenden</string>
@@ -441,8 +390,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
-     <normaloff>:/Icons/english.svg</normaloff>:/Icons/english.svg</iconset>
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/icons/english.svg</normaloff>:/icons/icons/english.svg</iconset>
    </property>
    <property name="text">
     <string>English</string>
@@ -450,6 +399,8 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
