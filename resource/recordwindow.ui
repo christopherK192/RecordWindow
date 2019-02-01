@@ -338,7 +338,15 @@
     <addaction name="actionDeutsch"/>
     <addaction name="actionEnglish"/>
    </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionFreeze"/>
+    <addaction name="actionSet_Toplevel"/>
+   </widget>
    <addaction name="menuDatei"/>
+   <addaction name="menuWindow"/>
    <addaction name="menuSprache"/>
   </widget>
   <action name="actionDeutsch">
@@ -398,6 +406,39 @@
    </property>
    <property name="text">
     <string>English</string>
+   </property>
+  </action>
+  <action name="actionFreeze">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Freeze</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionTransparent">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Set Transparent</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionSet_Toplevel">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Set Toplevel</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>

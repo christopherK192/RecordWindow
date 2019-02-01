@@ -23,10 +23,10 @@ RecordWindow::RecordWindow(QWidget *parent) :
     mo_PlayerWindow(nullptr),
     ms_videoStreamer(""),
     ms_videoPlayer(""),
-    ms_videoContainer1(""),
-    ms_videoContainer2(""),
     ms_hotkeyStart(""),
     ms_hotkeyStop(""),
+    ml_videoContainer1(""),
+    ml_videoContainer2(""),
     mo_savePath1(""),
     mo_savePath2(""),
     mp_filemodel1(new QFileSystemModel),
@@ -41,8 +41,6 @@ RecordWindow::RecordWindow(QWidget *parent) :
 {
     // initialize ui
     ui->setupUi(this);
-    setWindowFlags(//Qt::FramelessWindowHint |
-                   Qt::WindowStaysOnTopHint);
 
     ui->lineEdit_fightNr->clear();
     ui->lineEdit_fightNr->setText("100");
@@ -87,6 +85,9 @@ RecordWindow::RecordWindow(QWidget *parent) :
     connect(ui->pushButton_rename1, &QPushButton::clicked, [this](){RecordWindow::renameVideo(1);});
     connect(ui->pushButton_rename2, &QPushButton::clicked, [this](){RecordWindow::renameVideo(2);});
     connect(ui->actionBeenden, &QAction::triggered, this, &RecordWindow::close);
+
+    connect(ui->actionFreeze, &QAction::toggled, this, &RecordWindow::freezeWindow);
+    connect(ui->actionSet_Toplevel, &QAction::toggled, this, &RecordWindow::setTopevel);
 
 //    // setup language creating an actiongroup
 //    QActionGroup* langGroup = new QActionGroup(ui->menuSprache);
@@ -236,7 +237,7 @@ void RecordWindow::set_videoName()
 {
     // get the newest video file
     mo_savePath1.setFilter(QDir::Files | QDir::NoSymLinks);
-    mo_savePath1.setNameFilters(QStringList(ms_videoContainer1));
+    mo_savePath1.setNameFilters(QStringList(ml_videoContainer1));
     mo_savePath1.setSorting(QDir::Time);
 
     QStringList fileList = mo_savePath1.entryList();
@@ -274,7 +275,7 @@ void RecordWindow::set_videoName()
     if(!mb_Kameras2)
     {
         mo_savePath2.setFilter(QDir::Files | QDir::NoSymLinks);
-        mo_savePath2.setNameFilters(QStringList(ms_videoContainer1));
+        mo_savePath2.setNameFilters(QStringList(ml_videoContainer1));
         mo_savePath2.setSorting(QDir::Time);
 
         QStringList fileList2 = mo_savePath2.entryList();
@@ -356,11 +357,11 @@ void RecordWindow::openSettings()
 
     mb_Kameras2    = dialog.Kameras2();
     mo_savePath1 = QDir(dialog.savePath1());
-    ms_videoContainer1 = dialog.videoContainer1();
+    ml_videoContainer1 = dialog.videoContainer1();
     if(mb_Kameras2)
     {
         mo_savePath2 = QDir(dialog.savePath2());
-        ms_videoContainer2 = dialog.videoContainer2();
+        ml_videoContainer2 = dialog.videoContainer2();
     }
 
     ms_videoPlayer = dialog.videoPlayer();
@@ -379,7 +380,7 @@ void RecordWindow::openSettings()
     // setting the displayed folder to the video folder
     mp_filemodel1->setRootPath(mo_savePath1.absolutePath());
     ui->treeView_folder->setRootIndex(mp_proxymodel1->mapFromSource(mp_filemodel1->index(mo_savePath1.absolutePath())));
-    mp_filemodel1->setNameFilters(QStringList(ms_videoContainer1));
+    mp_filemodel1->setNameFilters(QStringList(ml_videoContainer1));
     ui->treeView_folder->setColumnWidth(0, 150);
 
     ui->tabWidget->setTabEnabled(1, mb_Kameras2);
@@ -388,11 +389,25 @@ void RecordWindow::openSettings()
         // setting the displayed folder to the video folder
         mp_filemodel2->setRootPath(mo_savePath2.absolutePath());
         ui->treeView_folder2->setRootIndex(mp_proxymodel2->mapFromSource(mp_filemodel2->index(mo_savePath2.absolutePath())));
-        mp_filemodel2->setNameFilters(QStringList(ms_videoContainer1));
+        mp_filemodel2->setNameFilters(QStringList(ml_videoContainer1));
         ui->treeView_folder2->setColumnWidth(0, 150);
     }
 
     ui->frame_recording->setEnabled(mb_useStreamer);
+}
+
+void RecordWindow::freezeWindow(bool set)
+{
+    setWindowFlag(Qt::FramelessWindowHint, set);
+    show();
+    ui->actionFreeze->setChecked(set);
+}
+
+void RecordWindow::setTopevel(bool set)
+{
+    setWindowFlag(Qt::WindowStaysOnTopHint, set);
+    show();
+    ui->actionSet_Toplevel->setChecked(set);
 }
 
 /*!

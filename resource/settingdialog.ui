@@ -24,6 +24,10 @@
   <property name="windowTitle">
    <string>Einstellungen</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../icons.qrc">
+    <normaloff>:/icons/icons/logo.ico</normaloff>:/icons/icons/logo.ico</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <property name="sizeConstraint">
     <enum>QLayout::SetFixedSize</enum>
@@ -102,25 +106,22 @@
           <string>Kamera 1:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Video Directory:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QComboBox" name="comboBox_videoContainer1"/>
-          </item>
-          <item row="1" column="2">
+          <item row="1" column="1">
            <widget class="QToolButton" name="button_videoPath1">
             <property name="text">
              <string>...</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_videoPath1"/>
+          <item row="3" column="0">
+           <widget class="QComboBox" name="comboBox_videoContainer1"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Video Directory:</string>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_4">
@@ -129,24 +130,8 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="check_videoPath1">
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../icons.qrc">:/icons/icons/checkNO.svg</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
-            </property>
-           </widget>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="lineEdit_videoPath1"/>
           </item>
          </layout>
         </widget>
@@ -157,25 +142,12 @@
           <string>Kamera 2:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_videoPath2"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QToolButton" name="button_videoPath2">
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>Recording Videoformat:</string>
             </property>
            </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QComboBox" name="comboBox_videoContainer2"/>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_5">
@@ -184,22 +156,16 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="lineEdit_videoPath2"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QComboBox" name="comboBox_videoContainer2"/>
+          </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="check_videoPath2">
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
+           <widget class="QToolButton" name="button_videoPath2">
             <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../icons.qrc">:/icons/icons/checkNO.svg</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
+             <string>...</string>
             </property>
            </widget>
           </item>
@@ -231,29 +197,10 @@
             </item>
            </widget>
           </item>
-          <item row="2" column="2">
+          <item row="2" column="1">
            <widget class="QToolButton" name="button_videoPlayer">
             <property name="text">
              <string>Verbinden</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="check_videoPlayer">
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../icons.qrc">:/icons/icons/checkNO.svg</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -308,10 +255,10 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QGridLayout" name="gridLayout_7">
-          <item row="1" column="2">
-           <widget class="QToolButton" name="button_videoStreamer">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_9">
             <property name="text">
-             <string>Verbinden</string>
+             <string>Video Streamer/Recorder:</string>
             </property>
            </widget>
           </item>
@@ -325,28 +272,9 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="check_videoStreamer">
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
+           <widget class="QToolButton" name="button_videoStreamer">
             <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../icons.qrc">:/icons/icons/checkNO.svg</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Video Streamer/Recorder:</string>
+             <string>Verbinden</string>
             </property>
            </widget>
           </item>
@@ -363,21 +291,9 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="1" column="1">
-           <widget class="QLabel" name="check_hotkeyStart">
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
+           <widget class="QToolButton" name="button_hotkeyStart">
             <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../icons.qrc">:/icons/icons/checkNO.svg</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
+             <string>Aufnehmen</string>
             </property>
            </widget>
           </item>
@@ -388,13 +304,6 @@
            <widget class="QLabel" name="label">
             <property name="text">
              <string>Hotkey Start Recording:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QToolButton" name="button_hotkeyStart">
-            <property name="text">
-             <string>Aufnehmen</string>
             </property>
            </widget>
           </item>
@@ -411,21 +320,9 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_6">
           <item row="1" column="1">
-           <widget class="QLabel" name="check_hotkeyStop">
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
+           <widget class="QToolButton" name="button_hotkeyStop">
             <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="../icons.qrc">:/icons/icons/checkNO.svg</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
+             <string>Aufnehmen</string>
             </property>
            </widget>
           </item>
@@ -436,13 +333,6 @@
            <widget class="QLabel" name="label_8">
             <property name="text">
              <string>Hotkey Stop Recording:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QToolButton" name="button_hotkeyStop">
-            <property name="text">
-             <string>Aufnehmen</string>
             </property>
            </widget>
           </item>
@@ -469,7 +359,7 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

@@ -2,15 +2,14 @@
 #define RECORDWINDOW_H
 
 #include <QMainWindow>
-#include <QDesktopServices>
 #include <QTranslator>
 #include <QFileSystemModel>
 #include <QSortFilterProxyModel>
-//#include <QDebug>
 #include <Windows.h>
 
 #include "include/settingdialog.h"
 
+#include <QDebug>
 
 namespace Ui {
 class RecordWindow;
@@ -33,10 +32,11 @@ private:
     QString ms_videoStreamer;
     QString ms_videoPlayer;
     QString ms_videoFile;
-    QString ms_videoContainer1;
-    QString ms_videoContainer2;
     QString ms_hotkeyStart;
     QString ms_hotkeyStop;
+
+    QStringList ml_videoContainer1;
+    QStringList ml_videoContainer2;
 
     QDir mo_savePath1;
     QDir mo_savePath2;
@@ -70,6 +70,8 @@ protected:
 
 private slots:
     void openSettings();
+    void freezeWindow(bool set);
+    void setTopevel(bool set);
     void startstopRecord();
     void startVideo();
     void stopVideo();
