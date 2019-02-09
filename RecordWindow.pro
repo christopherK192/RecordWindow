@@ -47,4 +47,3 @@ TRANSLATIONS += \
 
 win32: LIBS += -lUser32
 
-

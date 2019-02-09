@@ -46,8 +46,7 @@ RecordWindow::RecordWindow(QWidget *parent) :
     ui->lineEdit_fightNr->setText("100");
 
     ui->button_record->setText(tr("Start"));
-    ui->label_record->setEnabled(mb_recording);
-    ui->button_record->setEnabled(mb_useStreamer);
+    ui->frame_recording->setEnabled(mb_recording);
 
     ui->tabWidget->setTabEnabled(1, mb_Kameras2);
 

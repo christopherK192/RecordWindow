@@ -34,7 +34,9 @@ public:
 
 private:
     Ui::SettingDialog *ui;
-    enum class ReturnState{ACCEPT, REJECT};
+
+    enum ReturnState{ACCEPT = 0,
+                     REJECT = 1};
 
     QStringList m_lVideoContainers = {"Advanced Streaming Format (*.asf, *.wmv, *.wma)",
                                       "Audio Video Interleave (*.avi)",
@@ -66,6 +68,7 @@ private:
 
     bool m_bUseStreamer;
     bool m_bKameras2;
+    bool m_bEnableMessages;
 
     void errorHandler(QString text);
     void infoHandler(QString text);

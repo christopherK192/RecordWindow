@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>475</width>
-    <height>475</height>
+    <height>552</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,7 +35,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_settings">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="IVR">
       <attribute name="title">
@@ -298,7 +298,11 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_hotkeyStart"/>
+           <widget class="QLineEdit" name="lineEdit_hotkeyStart">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label">
@@ -327,7 +331,11 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_hotkeyStop"/>
+           <widget class="QLineEdit" name="lineEdit_hotkeyStop">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_8">

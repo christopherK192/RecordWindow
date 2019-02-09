@@ -15,6 +15,7 @@
  */
 SettingDialog::SettingDialog(QWidget *parent) :
     QDialog(parent),
+    m_bEnableMessages(true),
     ui(new Ui::SettingDialog)
 {
     // initialize ui
@@ -23,33 +24,30 @@ SettingDialog::SettingDialog(QWidget *parent) :
     // videoStreamer options
     ui->checkBox_videoStreamer->setChecked(false);
     ui->comboBox_videoStreamer->setCurrentIndex(0);
-//    ui->check_videoStreamer->setPixmap(QPixmap(ICON_CHECK_NO));
     ui->frame_recorder->setEnabled(false);
 
     ui->lineEdit_hotkeyStart->clear();
-//    ui->check_hotkeyStart->setPixmap(QPixmap(ICON_CHECK_NO));
     ui->frame_hotkeyStart->setEnabled(false);
 
     ui->lineEdit_hotkeyStop->clear();
-//    ui->check_hotkeyStop->setPixmap(QPixmap(ICON_CHECK_NO));
     ui->frame_hotkeyStop->setEnabled(false);
 
     // videoPlayer options
     ui->radioButton_Kamera1->setChecked(true);
-//    ui->check_videoPlayer->setPixmap(QPixmap(ICON_CHECK_NO));
     ui->comboBox_videoPlayer->setCurrentIndex(0);
 
     ui->lineEdit_videoPath1->clear();
-//    ui->check_videoPath1->setPixmap(QPixmap(ICON_CHECK_NO));
     ui->comboBox_videoContainer1->addItems(m_lVideoContainers);
     ui->comboBox_videoContainer1->setCurrentIndex(0);
 
     ui->lineEdit_videoPath2->clear();
-//    ui->check_videoPath2->setPixmap(QPixmap(ICON_CHECK_NO));
     ui->comboBox_videoContainer2->addItems(m_lVideoContainers);
     ui->comboBox_videoContainer2->setCurrentIndex(0);
 
     ui->groupBox_Kamera2->setEnabled(false);
+
+    // set video player as start view
+    ui->tabWidget_settings->setCurrentIndex(0);
 
     // getting the window names of all open windows
     // SettingDialog::getOpenWindows is the callback function for all windows.
@@ -62,14 +60,18 @@ SettingDialog::SettingDialog(QWidget *parent) :
     readSettings();
 
     // connect signals to buttons
-    connect(ui->button_videoStreamer, &QToolButton::clicked, [this](){SettingDialog::connect2Streamer(true);});
-    connect(ui->button_videoPlayer, &QToolButton::clicked, [this](){SettingDialog::connect2Player(true);});
+    connect(ui->button_videoStreamer, &QToolButton::clicked, this, SettingDialog::connect2Streamer);
+    connect(ui->button_videoPlayer,   &QToolButton::clicked, this, SettingDialog::connect2Player);
+
     connect(ui->radioButton_Kamera1, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(false);});
     connect(ui->radioButton_Kamera2, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(true);});
+
     connect(ui->button_videoPath1, &QToolButton::clicked, [this](){SettingDialog::setPath(1);});
     connect(ui->button_videoPath2, &QToolButton::clicked, [this](){SettingDialog::setPath(2);});
+
     connect(ui->comboBox_videoContainer1, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer1);
     connect(ui->comboBox_videoContainer2, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer2);
+
     connect(ui->checkBox_videoStreamer, &QCheckBox::stateChanged, this, &SettingDialog::toggleStreamer);
 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, [this](){SettingDialog::closeSettings(ReturnState::ACCEPT);});
@@ -154,8 +156,8 @@ BOOL CALLBACK SettingDialog::getOpenWindows(HWND window, LPARAM param)
     const int titleSize = 1024;
     char windowTitle[titleSize];
 
-//    GetClassNameA(window, windowTitle, titleSize);
-    GetWindowTextA(window, windowTitle, titleSize);
+    GetClassNameA(window, windowTitle, titleSize);
+//    GetWindowTextA(window, windowTitle, titleSize);
     QString title = QString::fromUtf8(windowTitle);
 
     if(IsWindow(window) && IsWindowVisible(window) && !title.isEmpty())
@@ -191,6 +193,8 @@ QStringList SettingDialog::extractFormat(QString videoContainer)
  */
 void SettingDialog::readSettings()
 {
+    m_bEnableMessages = false;
+
     QSettings settings("CHK-Soft", "IVR-Record App");
     settings.beginGroup("IVRsettings");
 
@@ -206,7 +210,6 @@ void SettingDialog::readSettings()
     {
         m_sVideoStreamer = "";
         ui->comboBox_videoStreamer->setCurrentIndex(0);
-//        ui->check_videoStreamer->setPixmap(QPixmap(ICON_CHECK_NO));
     }
 
     // video player if open
@@ -221,7 +224,6 @@ void SettingDialog::readSettings()
     {
         m_sVideoPlayer = "";
         ui->comboBox_videoPlayer->setCurrentIndex(0);
-//        ui->check_videoPlayer->setPixmap(QPixmap(ICON_CHECK_NO));
     }
 
     // savepath1 if existing
@@ -229,13 +231,12 @@ void SettingDialog::readSettings()
     if(!save_Path1.isEmpty())
     {
         ui->lineEdit_videoPath1->setText(save_Path1);
-//        ui->check_videoPath1->setPixmap(QPixmap(ICON_CHECK_OK));
     }
     else
     {
         ui->lineEdit_videoPath1->setText("");
-//        ui->check_videoPath1->setPixmap(QPixmap(ICON_CHECK_NO));
     }
+
     m_sSavePath1 = ui->lineEdit_videoPath1->text();
 
     // savepath2 if existing
@@ -243,13 +244,12 @@ void SettingDialog::readSettings()
     if(!save_Path2.isEmpty())
     {
         ui->lineEdit_videoPath2->setText(save_Path2);
-//        ui->check_videoPath2->setPixmap(QPixmap(ICON_CHECK_OK));
     }
     else
     {
         ui->lineEdit_videoPath2->setText("");
-//        ui->check_videoPath2->setPixmap(QPixmap(ICON_CHECK_NO));
     }
+
     m_sSavePath2 = ui->lineEdit_videoPath2->text();
 
     // video_container1
@@ -263,6 +263,7 @@ void SettingDialog::readSettings()
     {
         ui->comboBox_videoContainer1->setCurrentIndex(0);
     }
+
     m_sVideoContainer1 = ui->comboBox_videoContainer1->currentText();
 
     // video_container2
@@ -276,37 +277,38 @@ void SettingDialog::readSettings()
     {
         ui->comboBox_videoContainer2->setCurrentIndex(0);
     }
+
     m_sVideoContainer1 = ui->comboBox_videoContainer2->currentText();
 
     // hotkeyStart if existing
     const QString hotkey_start = settings.value("hotkeyStart", "").toString();
     if(!hotkey_start.isEmpty())
     {
-        ui->lineEdit_hotkeyStart->setText(save_Path2);
-//        ui->check_hotkeyStart->setPixmap(QPixmap(ICON_CHECK_OK));
+        ui->lineEdit_hotkeyStart->setText(hotkey_start);
     }
     else
     {
         ui->lineEdit_hotkeyStart->setText("");
-//        ui->check_hotkeyStart->setPixmap(QPixmap(ICON_CHECK_NO));
     }
+
     m_sHotkeyStart = ui->lineEdit_hotkeyStart->text();
 
     // hotkeyStop if existing
     const QString hotkey_stop = settings.value("hotkeyStop", "").toString();
     if(!hotkey_start.isEmpty())
     {
-        ui->lineEdit_hotkeyStop->setText(save_Path2);
-//        ui->check_hotkeyStart->setPixmap(QPixmap(ICON_CHECK_OK));
+        ui->lineEdit_hotkeyStop->setText(hotkey_stop);
     }
     else
     {
         ui->lineEdit_hotkeyStop->setText("");
-//        ui->check_hotkeyStart->setPixmap(QPixmap(ICON_CHECK_NO));
     }
+
     m_sHotkeyStop = ui->lineEdit_hotkeyStop->text();
 
     settings.endGroup();
+
+    m_bEnableMessages = true;
 }
 
 /*!
@@ -320,6 +322,7 @@ void SettingDialog::writeSettings()
     QSettings settings("MySoft", "IVR-Record App");
 
     settings.beginGroup("IVRsettings");
+
     settings.setValue("videoStreamer", ui->comboBox_videoStreamer->currentText());
     settings.setValue("videoPlayer", ui->comboBox_videoPlayer->currentText());
     settings.setValue("videoPath1", ui->lineEdit_videoPath1->text());
@@ -328,6 +331,7 @@ void SettingDialog::writeSettings()
     settings.setValue("videoContainer2", ui->comboBox_videoContainer2->currentText());
     settings.setValue("hotkeyStart", ui->lineEdit_hotkeyStart->text());
     settings.setValue("hotkeyStop", ui->lineEdit_hotkeyStop->text());
+
     settings.endGroup();
 }
 
@@ -337,35 +341,33 @@ void SettingDialog::writeSettings()
  *
  * \param manuell Suppresses the error or info message if false (called by readSettings()).
  */
-void SettingDialog::connect2Streamer(bool manuell)
+void SettingDialog::connect2Streamer()
 {
     m_sVideoStreamer = ui->comboBox_videoStreamer->currentText();
 
-    if (!(m_sVideoStreamer == "-"))
-    {
-//        HWND windowName = FindWindowA(m_videoStreamer.toStdString().c_str(), nullptr);
-        HWND windowName = FindWindowA(nullptr, m_sVideoStreamer.toStdString().c_str());
-        if(windowName == nullptr)
-        {
-            m_sVideoStreamer = "";
-//            ui->check_videoStreamer->setPixmap(QPixmap(ICON_CHECK_NO));
-            if(manuell)
-                errorHandler(tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!"));
-        }
-        else
-        {
-//            ui->check_videoStreamer->setPixmap(QPixmap(ICON_CHECK_OK));
-            if(manuell)
-                infoHandler(tr("Verbindung mit dem Programm wurde erfolgreich hergestellt."));
-        }
-    }
-    else
+    if (m_sVideoStreamer == "-")
     {
         m_sVideoStreamer = "";
-//        ui->check_videoStreamer->setPixmap(QPixmap(ICON_CHECK_NO));
-        if(manuell)
+        if(m_bEnableMessages)
             errorHandler(tr("FEHLER:\nEs wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!"));
+
+        return;
     }
+
+    HWND windowName = FindWindowA(m_videoStreamer.toStdString().c_str(), nullptr);
+//    HWND windowName = FindWindowA(nullptr, m_sVideoStreamer.toStdString().c_str());
+    if(windowName == nullptr)
+     {
+        m_sVideoStreamer = "";
+        if(m_bEnableMessages)
+            errorHandler(tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!"));
+     }
+    else
+    {
+        if(m_bEnableMessages)
+            infoHandler(tr("Verbindung mit dem Programm wurde erfolgreich hergestellt."));
+    }
+
 }
 
 /*!
