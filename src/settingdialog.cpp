@@ -2,7 +2,11 @@
 #include "ui_settingdialog.h"
 
 #include <QMessageBox>
-#include <QSettings>
+#include <QTextStream>
+//#include <QSettings>
+
+class RecordWindow;
+
 
 /*!
  * \brief SettingDialog::SettingDialog
@@ -15,11 +19,24 @@
  */
 SettingDialog::SettingDialog(QWidget *parent) :
     QDialog(parent),
-    m_bEnableMessages(true),
     ui(new Ui::SettingDialog)
 {
     // initialize ui
     ui->setupUi(this);
+
+    // IVR options
+    ui->radioButton_Kamera1->setChecked(true);
+
+    ui->lineEdit_videoPath1->clear();
+    ui->comboBox_videoContainer1->addItems(VIDEO_CONTAINERS);
+    ui->comboBox_videoContainer1->setCurrentIndex(0);
+
+    ui->lineEdit_videoPath2->clear();
+    ui->comboBox_videoContainer2->addItems(VIDEO_CONTAINERS);
+    ui->comboBox_videoContainer2->setCurrentIndex(0);
+    ui->groupBox_Kamera2->setEnabled(false);
+
+    ui->comboBox_videoPlayer->setCurrentIndex(0);
 
     // videoStreamer options
     ui->checkBox_videoStreamer->setChecked(false);
@@ -32,20 +49,6 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->lineEdit_hotkeyStop->clear();
     ui->frame_hotkeyStop->setEnabled(false);
 
-    // videoPlayer options
-    ui->radioButton_Kamera1->setChecked(true);
-    ui->comboBox_videoPlayer->setCurrentIndex(0);
-
-    ui->lineEdit_videoPath1->clear();
-    ui->comboBox_videoContainer1->addItems(m_lVideoContainers);
-    ui->comboBox_videoContainer1->setCurrentIndex(0);
-
-    ui->lineEdit_videoPath2->clear();
-    ui->comboBox_videoContainer2->addItems(m_lVideoContainers);
-    ui->comboBox_videoContainer2->setCurrentIndex(0);
-
-    ui->groupBox_Kamera2->setEnabled(false);
-
     // set video player as start view
     ui->tabWidget_settings->setCurrentIndex(0);
 
@@ -57,28 +60,28 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->comboBox_videoPlayer->addItems(windowList);
 
     // get saved settings
-    readSettings();
+//    loadSettings();
 
-    // connect signals to buttons
-    connect(ui->button_videoStreamer, &QToolButton::clicked, this, SettingDialog::connect2Streamer);
-    connect(ui->button_videoPlayer,   &QToolButton::clicked, this, SettingDialog::connect2Player);
+//    // connect signals to buttons
+//    connect(ui->button_videoStreamer, &QToolButton::clicked, this, SettingDialog::connect2Streamer);
+//    connect(ui->button_videoPlayer,   &QToolButton::clicked, this, SettingDialog::connect2Player);
 
-    connect(ui->radioButton_Kamera1, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(false);});
-    connect(ui->radioButton_Kamera2, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(true);});
+//    connect(ui->radioButton_Kamera1, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(false);});
+//    connect(ui->radioButton_Kamera2, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(true);});
 
-    connect(ui->button_videoPath1, &QToolButton::clicked, [this](){SettingDialog::setPath(1);});
-    connect(ui->button_videoPath2, &QToolButton::clicked, [this](){SettingDialog::setPath(2);});
+//    connect(ui->button_videoPath1, &QToolButton::clicked, [this](){SettingDialog::setPath(1);});
+//    connect(ui->button_videoPath2, &QToolButton::clicked, [this](){SettingDialog::setPath(2);});
 
-    connect(ui->comboBox_videoContainer1, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer1);
-    connect(ui->comboBox_videoContainer2, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer2);
+//    connect(ui->comboBox_videoContainer1, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer1);
+//    connect(ui->comboBox_videoContainer2, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer2);
 
-    connect(ui->checkBox_videoStreamer, &QCheckBox::stateChanged, this, &SettingDialog::toggleStreamer);
+//    connect(ui->checkBox_videoStreamer, &QCheckBox::stateChanged, this, &SettingDialog::toggleStreamer);
 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, [this](){SettingDialog::closeSettings(ReturnState::ACCEPT);});
     connect(ui->buttonBox, &QDialogButtonBox::rejected, [this](){SettingDialog::closeSettings(ReturnState::REJECT);});
 
-    toggleCams(false);
-    toggleStreamer(Qt::CheckState::Unchecked);
+//    toggleCams(false);
+//    toggleStreamer(Qt::CheckState::Unchecked);
 }
 
 /*!
@@ -90,64 +93,14 @@ SettingDialog::~SettingDialog()
     delete ui;
 }
 
-const QStringList SettingDialog::videoContainer1()
-{
-    return extractFormat(m_sVideoContainer1);
-}
-
-const QStringList SettingDialog::videoContainer2()
-{
-    return extractFormat(m_sVideoContainer2);
-}
-
-/*!
- * \brief SettingDialog::errorHandler
- *        Opens a Message Box with an error message.
- *
- * \param text The text of the error message.
- */
-void SettingDialog::errorHandler(QString text)
-{
-    QMessageBox message;
-    message.setWindowTitle("IVR-Record App");
-    message.setWindowIcon(QIcon(ICON_LOGO));
-    message.setIcon(QMessageBox::Critical);
-    message.setDefaultButton(QMessageBox::Ok);
-    message.setText(text.toStdString().c_str());
-    QFont font;
-    font.setPointSize(9);
-    message.setFont(font);
-    message.exec();
-}
-
-/*!
- * \brief SettingDialog::infoHandler
- *        Opens a Message Box with an info message.
- *
- * \param text The text of the info message.
- */
-void SettingDialog::infoHandler(QString text)
-{
-    QMessageBox message;
-    message.setWindowTitle("IVR-Record App");
-    message.setWindowIcon(QIcon(ICON_LOGO));
-    message.setIcon(QMessageBox::Information);
-    message.setDefaultButton(QMessageBox::Ok);
-    message.setText(text.toStdString().c_str());
-    QFont font;
-    font.setPointSize(9);
-    message.setFont(font);
-    message.exec();
-}
-
 /*!
  * \brief SettingDialog::getOpenWindows
  *        Callback function for each open window.
  *
  * Extracts the window name of each window and stores them in a list.
  *
- * \param window Window Handle of the current Window.
- * \param param In this case it's the list of all window names.
+ * \param window [in]  Window Handle of the current Window.
+ * \param param  [out] In this case it's the list of all window names.
  *
  * \return Returns true if successful.
  */
@@ -173,7 +126,7 @@ BOOL CALLBACK SettingDialog::getOpenWindows(HWND window, LPARAM param)
  * \brief SettingDialog::extractFormat
  *        Extracts the video format from the combobox item.
  *
- * \param videoContainer combobox item.
+ * \param videoContainer [in] combobox item.
  *
  * \return Returns list of video formats.
  */
@@ -186,12 +139,20 @@ QStringList SettingDialog::extractFormat(QString videoContainer)
 }
 
 /*!
- * \brief SettingDialog::readSettings
+ * \brief SettingDialog::recordHotkey
+ *        Extracts the video format from the combobox item.
+ */
+void SettingDialog::recordHotkey()
+{
+}
+
+/*!
+ * \brief SettingDialog::loadSettings
  *        Reads the saved settings when constructed.
  *
  * Settings: Windowname of the last selected video streamer and video player as well as the savepaths, videocontainers and hotkeys.
  */
-void SettingDialog::readSettings()
+void SettingDialog::loadSettings()
 {
     m_bEnableMessages = false;
 
@@ -317,165 +278,164 @@ void SettingDialog::readSettings()
  *
  * Settings: Windowname of the last selected video streamer and video player as well as the savepaths, videocontainers and hotkeys.
  */
-void SettingDialog::writeSettings()
+void SettingDialog::saveSettings()
 {
-    QSettings settings("MySoft", "IVR-Record App");
+    QFile saveFile(QDir::currentPath() + "/savefiles/settings.sav");
 
-    settings.beginGroup("IVRsettings");
+    if(saveFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream saveStream(&saveFile);
 
-    settings.setValue("videoStreamer", ui->comboBox_videoStreamer->currentText());
-    settings.setValue("videoPlayer", ui->comboBox_videoPlayer->currentText());
-    settings.setValue("videoPath1", ui->lineEdit_videoPath1->text());
-    settings.setValue("videoPath2", ui->lineEdit_videoPath2->text());
-    settings.setValue("videoContainer1", ui->comboBox_videoContainer1->currentText());
-    settings.setValue("videoContainer2", ui->comboBox_videoContainer2->currentText());
-    settings.setValue("hotkeyStart", ui->lineEdit_hotkeyStart->text());
-    settings.setValue("hotkeyStop", ui->lineEdit_hotkeyStop->text());
-
-    settings.endGroup();
+        saveFile.close();
+       tr("Einstellungen wurden erfolgreich gespeichert.");
+    }
+    tr("FEHLER:\nEinstellungen konnten nicht gespeichert werden.");
 }
 
 /*!
- * \brief SettingDialog::connect2Streamer
- *        Extract the window handle for the video streamer.
- *
- * \param manuell Suppresses the error or info message if false (called by readSettings()).
+ * \brief SettingDialog::closeSettings
+ *        Writes settings and returns accepted or rejected.
+ * \param mode Mode of the return (accepted or rejected)
  */
-void SettingDialog::connect2Streamer()
+void SettingDialog::closeSettings(ReturnState state)
 {
-    m_sVideoStreamer = ui->comboBox_videoStreamer->currentText();
-
-    if (m_sVideoStreamer == "-")
+    switch(state)
     {
-        m_sVideoStreamer = "";
-        if(m_bEnableMessages)
-            errorHandler(tr("FEHLER:\nEs wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!"));
+        case ReturnState::ACCEPT:
+            saveSettings();
 
-        return;
+            emit accept();
+            break;
+
+        case ReturnState::REJECT:
+            emit reject();
+            break;
+    }
+}
+
+/**************************************************
+ * IVR Functions
+ **************************************************
+ */
+
+/*!
+ * \brief SettingDialog::toggleCameras
+ *        Toggles number of cameras.
+ *
+ * \param camera [in] number of cameras to be used.
+ */
+void SettingDialog::toggleCameras(const int camera)
+{
+    m_nNumberCamers = camera;
+    ui->groupBox_Kamera2->setEnabled(camera == 2);
+}
+
+/*!
+ * \brief SettingDialog::setVideoPath
+ *        Gets and sets the savepath over the File Dialog.
+ *        Called by [...]-button.
+ *
+ * \param camera [in] Sets the path for camera number camera.
+ */
+QString SettingDialog::setVideoPath(const int camera)
+{
+    QString* path = nullptr;
+    QLineEdit* pathLineEdit = nullptr;
+
+    switch(camera)
+    {
+        case 1:
+            path = &m_sVideoPath1;
+            pathLineEdit= ui->lineEdit_videoPath1;
+            break;
+        case 2:
+            path = &m_sVideoPath2;
+            pathLineEdit = ui->lineEdit_videoPath2;
+            break;
     }
 
-    HWND windowName = FindWindowA(m_videoStreamer.toStdString().c_str(), nullptr);
-//    HWND windowName = FindWindowA(nullptr, m_sVideoStreamer.toStdString().c_str());
-    if(windowName == nullptr)
-     {
-        m_sVideoStreamer = "";
-        if(m_bEnableMessages)
-            errorHandler(tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!"));
-     }
-    else
+    QString savepath = QFileDialog::getExistingDirectory(this, tr("Ordner Öffnen"), *path,
+                                                         QFileDialog::DontResolveSymlinks |
+                                                         QFileDialog::ShowDirsOnly);
+
+    if(savepath.isEmpty())
     {
-        if(m_bEnableMessages)
-            infoHandler(tr("Verbindung mit dem Programm wurde erfolgreich hergestellt."));
+        return tr("FEHLER:\nEs wurde kein Ordner ausgewählt!\nBitte wählen Sie einen Ordner aus!");
     }
 
+    pathLineEdit->setText(savepath);
+    *path = pathLineEdit->text();
+
+    return "";
+}
+
+/*!
+ * \brief SettingDialog::setVideoContainer
+ *        Sets the videoContainer by change of comboBox item;
+ *
+ * \param camera [in] gets video container for camera number camera.
+ */
+void SettingDialog::setVideoContainer(const int camera)
+{
+    switch(camera)
+    {
+        case 1:
+            m_slVideoContainer1 = extractFormat(ui->comboBox_videoContainer1->currentText());
+            break;
+        case 2:
+            m_slVideoContainer2 = extractFormat(ui->comboBox_videoContainer2->currentText());
+            break;
+    }
 }
 
 /*!
  * \brief SettingDialog::connect2Player
  *        Extract the window handle for the video player.
- *
- * \param manuell Suppresses the error or info message if false (called by readSettings()).
  */
-void SettingDialog::connect2Player(bool manuell)
+QString SettingDialog::connect2Player()
 {
-    m_sVideoPlayer = ui->comboBox_videoPlayer->currentText();
+    m_pVideoPlayer = nullptr;
+    QString player = ui->comboBox_videoPlayer->currentText();
 
-    if (!(m_sVideoPlayer == "-"))
+    if (player == "-" || player.isEmpty())
     {
-//       HWND windowHandler = FindWindowA(m_videoPlayer.toStdString().c_str(), nullptr);
-        HWND windowHandler = FindWindowA(nullptr, m_sVideoPlayer.toStdString().c_str());
-        if(windowHandler == nullptr)
-        {
-            m_sVideoPlayer = "";
-//            ui->check_videoPlayer->setPixmap(QPixmap(ICON_CHECK_NO));
-            if(manuell)
-                errorHandler(tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!"));
-        }
-        else
-        {
-//            ui->check_videoPlayer->setPixmap(QPixmap(ICON_CHECK_OK));
-            if(manuell)
-                infoHandler(tr("Verbindung mit dem Programm wurde erfolgreich hergestellt."));
-        }
+        return tr("FEHLER:\nEs wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!");
     }
-    else
+
+    //HWND windowHandler = FindWindowA(player.toStdString().c_str(), nullptr);
+    HWND windowHandler = FindWindowA(nullptr, player.toStdString().c_str());
+
+    if(windowHandler == nullptr)
     {
-        m_sVideoPlayer = "";
-//        ui->check_videoPlayer->setPixmap(QPixmap(ICON_CHECK_NO));
-        if(manuell)
-            errorHandler(tr("FEHLER:\nEs wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!"));
+        return tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!");
     }
+
+    m_pVideoPlayer = &windowHandler;
+    return tr("Verbindung mit dem Programm wurde erfolgreich hergestellt.");
 }
 
-/*!
- * \brief SettingDialog::setPath
- *        Gets and sets the savepath over the File Dialog.
- *        Called by [...]-button.
- *
- * \param cam Sets the path for camera 1 or two.
+
+/**************************************************
+ * Recording Functions
+ **************************************************
  */
-void SettingDialog::setPath(int cam)
-{
-    if (cam == 1)
-    {
-        QString savepath = QFileDialog::getExistingDirectory(this, tr("Ordner Öffnen"), m_sSavePath1, QFileDialog::DontResolveSymlinks);
-
-        if(savepath.isEmpty())
-        {
-//            ui->check_videoPath1->setPixmap(QPixmap(ICON_CHECK_NO));
-            errorHandler(tr("FEHLER:\nEs wurde kein Ordner ausgewählt!\nBitte wählen Sie einen Ordner aus!"));
-        }
-        else
-        {
-            ui->lineEdit_videoPath1->setText(savepath);
-            m_sSavePath1 = ui->lineEdit_videoPath1->text();
-//            ui->check_videoPath1->setPixmap(QPixmap(ICON_CHECK_OK));
-        }
-    }
-    else if (cam == 2)
-    {
-        QString savepath = QFileDialog::getExistingDirectory(this, tr("Ordner Öffnen"), m_sSavePath2, QFileDialog::DontResolveSymlinks);
-
-        if(savepath.isEmpty())
-        {
-//            ui->check_videoPath2->setPixmap(QPixmap(ICON_CHECK_NO));
-            errorHandler(tr("FEHLER:\nEs wurde kein Ordner ausgewählt!\nBitte wählen Sie einen Ordner aus!"));
-        }
-        else
-        {
-            ui->lineEdit_videoPath2->setText(savepath);
-            m_sSavePath2 = ui->lineEdit_videoPath2->text();
-//            ui->check_videoPath2->setPixmap(QPixmap(ICON_CHECK_OK));
-        }
-    }
-}
-
-/*!
- * \brief SettingDialog::toggleKameras
- *        Toggles number of cameras.
- *
- * \param camera2 True if two cameras are to be used.
- */
-void SettingDialog::toggleCams(bool cam2)
-{
-    m_bKameras2 = cam2;
-    ui->groupBox_Kamera2->setEnabled(cam2);
-}
 
 /*!
  * \brief SettingDialog::toggleStreamer
  *        Toggles state of the checkbox and enables or disables videostreamer options.
  *
- * \param state State of the checkbox (Checked, Unchecked).
+ * \param state [in] State of the checkbox (Checked, Unchecked).
  */
-void SettingDialog::toggleStreamer(int state)
+void SettingDialog::enableStreamer(const int state)
 {
     switch(state)
     {
         case Qt::CheckState::Checked:
-            m_bUseStreamer = true; break;
+            m_bUseStreamer = true;
+            break;
         case Qt::CheckState::Unchecked:
-            m_bUseStreamer = false; break;
+            m_bUseStreamer = false;
+            break;
     }
 
     ui->frame_recorder->setEnabled(m_bUseStreamer);
@@ -484,41 +444,64 @@ void SettingDialog::toggleStreamer(int state)
 }
 
 /*!
- * \brief SettingDialog::setVideoContainer1
- *        Sets the videoContainer1 by change of comboBox item;
+ * \brief SettingDialog::connect2Streamer
+ *        Extract the window handle for the video streamer.
  */
-void SettingDialog::setVideoContainer1(const QString container)
+QString SettingDialog::connect2Streamer()
 {
-    m_sVideoContainer1 = container;
-}
+    m_pVideoStreamer = nullptr;
+    QString streamer = ui->comboBox_videoStreamer->currentText();
 
-/*!
- * \brief SettingDialog::setVideoContainer2
- *        Sets the videoContainer2 by change of comboBox item;
- */
-void SettingDialog::setVideoContainer2(const QString container)
-{
-    m_sVideoContainer2 = container;
-}
-
-/*!
- * \brief SettingDialog::closeSettings
- *        Writes settings and returns accepted or rejected.
- * \param mode Mode of the return (accepted or rejected)
- */
-void SettingDialog::closeSettings(ReturnState mode)
-{
-    switch(mode)
+    if (streamer == "-" || streamer.isEmpty())
     {
-        case ReturnState::ACCEPT:
-            writeSettings();
-            infoHandler(tr("Einstellungen wurden erfolgreich gespeichert."));
-            emit accept();
-            break;
+        dynamic_cast<RecordWindow*>(parentWidget());
+        return tr("FEHLER:\nEs wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!");
+    }
 
-        case ReturnState::REJECT:
-            emit reject();
+    //HWND windowHandler = FindWindowA(streamer.toStdString().c_str(), nullptr);
+    HWND windowHandler = FindWindowA(nullptr, streamer.toStdString().c_str());
+
+    if(windowHandler == nullptr)
+    {
+        return tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!");
+    }
+
+    m_pVideoStreamer = &windowHandler;
+    return tr("Verbindung mit dem Programm wurde erfolgreich hergestellt.");
+}
+
+/*!
+ * \brief SettingDialog::setHotkey
+ *        Records a hotkey.
+ *
+ * \param hotkey [in] Hotkey to be recorded.
+ */
+void SettingDialog::setHotkey(const int hotkey)
+{
+    QString* keyCombi = nullptr;
+    QLineEdit* keyLineEdit = nullptr;
+
+    switch(hotkey)
+    {
+        case Hotkeys::RECORDING_START:
+            keyCombi = &m_sHotkeyStart;
+            keyLineEdit= ui->lineEdit_hotkeyStart;
+            break;
+        case Hotkeys::RECORDING_STOP:
+            keyCombi = &m_sHotkeyStop;
+            keyLineEdit = ui->lineEdit_hotkeyStop;
             break;
     }
+
+//    QString savepath = QFileDialog::getExistingDirectory(this, tr("Ordner Öffnen"), *path,
+//                                                         QFileDialog::DontResolveSymlinks |
+//                                                         QFileDialog::ShowDirsOnly);
+
+//    if(savepath.isEmpty())
+//    {
+//        return tr("FEHLER:\nEs wurde kein Ordner ausgewählt!\nBitte wählen Sie einen Ordner aus!");
+//    }
+
+    *keyCombi = keyLineEdit->text();
 }
 

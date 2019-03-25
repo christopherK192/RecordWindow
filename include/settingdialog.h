@@ -8,6 +8,7 @@
 #define ICON_CHECK_NO ":/icons/icons/checkNO.svg"
 #define ICON_LOGO     ":/icons/icons/logo.ico"
 
+
 namespace Ui {
 class SettingDialog;
 }
@@ -20,72 +21,100 @@ public:
     explicit SettingDialog(QWidget *parent = nullptr);
     ~SettingDialog();
 
-    const QString videoStreamer(){return m_sVideoStreamer;}
-    const QString videoPlayer(){return m_sVideoPlayer;}
-    const QString savePath1(){return m_sSavePath1;}
-    const QString savePath2(){return m_sSavePath2;}
-    const QStringList videoContainer1();
-    const QStringList videoContainer2();
-    const QString hotkeyStart(){return m_sHotkeyStart;}
-    const QString hotkeyStop(){return m_sHotkeyStop;}
+    enum ReturnState{ACCEPT = 0,
+                     REJECT
+                    };
 
-    bool useStreamer(){return m_bUseStreamer;}
-    bool Kameras2(){return m_bKameras2;}
+    enum Hotkeys{RECORDING_START = 0,
+                 RECORDING_STOP
+                };
+
+    enum SettingList{NUMBER_CAMS = 0,
+                     VIDEO_DIR_1,
+                     VIDEO_CONTAINER_1,
+                     VIDEO_DIR_2,
+                     VIDEO_CONTAINER_2,
+                     VIDEO_PLAYER,
+                     STREAMER_ENABLED,
+                     VIDEO_STREAMER,
+                     HOTKEY_START,
+                     HOTKEY_STOP,
+                     NUMBER_SETTINGS
+                    };
+
+    QStringList SettingText{"NUMBER_CAMS",
+                            "VIDEO_DIR_1",
+                            "VIDEO_CONTAINER_1",
+                            "VIDEO_DIR_2",
+                            "VIDEO_CONTAINER_2",
+                            "VIDEO_PLAYER",
+                            "STREAMER_ENABLED",
+                            "VIDEO_STREAMER",
+                            "HOTKEY_START",
+                            "HOTKEY_STOP",
+                            "NUMBER_SETTINGS"
+                           };
+
+    const QStringList VIDEO_CONTAINERS = {"Advanced Streaming Format (*.asf, *.wmv, *.wma)",
+                                          "Audio Video Interleave (*.avi)",
+                                          "BDAV MPEG-2 Transport Stream (*.m2ts, *.mts)",
+                                          "Digital Video (*.dv)",
+                                          "DivX Media Format (*.divx)",
+                                          "Enhanced VOB (*.evo)",
+                                          "Flash Video (*.flv)",
+                                          "Material Exchange Format (*.mxf)",
+                                          "Matroska (*.mkv, *.mka)",
+                                          "MPEG-2-Program Stream (*.mpg, *.mpeg, *.ps)",
+                                          "MPEG-2 Transport Stream (*.ts, *.tsp)",
+                                          "MP4 (*.mp4)",
+                                          "Ogg Media (*.ogg, *.ogv, *.ogm)",
+                                          "OMFI (*.omf)",
+                                          "QuickTime (*.mov, *.qt)",
+                                          "RealMedia (*.rm, *.rmvb, *.ra, *.ram)",
+                                          "Video Object (*.vob)",
+                                          "WebM (*.webm)"
+                                         };
 
 private:
-    Ui::SettingDialog *ui;
-
-    enum ReturnState{ACCEPT = 0,
-                     REJECT = 1};
-
-    QStringList m_lVideoContainers = {"Advanced Streaming Format (*.asf, *.wmv, *.wma)",
-                                      "Audio Video Interleave (*.avi)",
-                                      "BDAV MPEG-2 Transport Stream (*.m2ts, *.mts)",
-                                      "Digital Video (*.dv)",
-                                      "DivX Media Format (*.divx)",
-                                      "Enhanced VOB (*.evo)",
-                                      "Flash Video (*.flv)",
-                                      "Material Exchange Format (*.mxf)",
-                                      "Matroska (*.mkv, *.mka)",
-                                      "MPEG-2-Program Stream (*.mpg, *.mpeg, *.ps)",
-                                      "MPEG-2 Transport Stream (*.ts, *.tsp)",
-                                      "MP4 (*.mp4)",
-                                      "Ogg Media (*.ogg, *.ogv, *.ogm)",
-                                      "OMFI (*.omf)",
-                                      "QuickTime (*.mov, *.qt)",
-                                      "RealMedia (*.rm, *.rmvb, *.ra, *.ram)",
-                                      "Video Object (*.vob)",
-                                      "WebM (*.webm)"};
-
-    QString m_sVideoStreamer;
-    QString m_sVideoPlayer;
-    QString m_sSavePath1;
-    QString m_sSavePath2;
-    QString m_sVideoContainer1;
-    QString m_sVideoContainer2;
-    QString m_sHotkeyStart;
-    QString m_sHotkeyStop;
-
-    bool m_bUseStreamer;
-    bool m_bKameras2;
-    bool m_bEnableMessages;
-
-    void errorHandler(QString text);
-    void infoHandler(QString text);
     static BOOL CALLBACK getOpenWindows(HWND window, LPARAM param);
     QStringList extractFormat(QString videoContainer);
+    void recordHotkey();
 
 private slots:
-    void readSettings();
-    void writeSettings();
-    void connect2Streamer(bool manuell);
-    void connect2Player(bool manuell);
-    void setPath(int cam);
-    void toggleCams(bool cam2);
-    void toggleStreamer(int state);
-    void setVideoContainer1(const QString container);
-    void setVideoContainer2(const QString container);
-    void closeSettings(SettingDialog::ReturnState mode);
+    void loadSettings();
+    void saveSettings();
+    void closeSettings(SettingDialog::ReturnState state);
+
+    // IVR Functions
+    void toggleCameras(const int camera);
+    QString setVideoPath(const int camera);
+    void setVideoContainer(const int camera);
+    QString connect2Player();
+
+    // Recording Functions
+    void enableStreamer(const int state);
+    QString connect2Streamer();
+    void setHotkey(const int hotkey);
+
+private:
+    Ui::SettingDialog *ui;  
+
+    // IVR variables
+    HWND*       m_pVideoPlayer;
+    QStringList m_slVideoContainer1;
+    QStringList m_slVideoContainer2;
+    QString     m_sVideoPath1;
+    QString     m_sVideoPath2;
+    int         m_nNumberCamers;
+
+    // Recording variables
+    HWND*   m_pVideoStreamer;
+    QString m_sHotkeyStart;
+    QString m_sHotkeyStop;
+    bool    m_bUseStreamer;
+
+
 };
 
 #endif // SETTINGDIALOG_H
+

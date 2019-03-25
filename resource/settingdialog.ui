@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>475</width>
-    <height>552</height>
+    <width>500</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,7 +35,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget_settings">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="IVR">
       <attribute name="title">
@@ -367,12 +367,32 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget_settings</tabstop>
+  <tabstop>radioButton_Kamera1</tabstop>
+  <tabstop>radioButton_Kamera2</tabstop>
+  <tabstop>lineEdit_videoPath1</tabstop>
+  <tabstop>button_videoPath1</tabstop>
+  <tabstop>comboBox_videoContainer1</tabstop>
+  <tabstop>lineEdit_videoPath2</tabstop>
+  <tabstop>button_videoPath2</tabstop>
+  <tabstop>comboBox_videoContainer2</tabstop>
+  <tabstop>comboBox_videoPlayer</tabstop>
+  <tabstop>button_videoPlayer</tabstop>
+  <tabstop>checkBox_videoStreamer</tabstop>
+  <tabstop>comboBox_videoStreamer</tabstop>
+  <tabstop>button_videoStreamer</tabstop>
+  <tabstop>lineEdit_hotkeyStart</tabstop>
+  <tabstop>button_hotkeyStart</tabstop>
+  <tabstop>lineEdit_hotkeyStop</tabstop>
+  <tabstop>button_hotkeyStop</tabstop>
+ </tabstops>
  <resources>
   <include location="../icons.qrc"/>
  </resources>
