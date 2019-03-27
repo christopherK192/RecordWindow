@@ -175,6 +175,9 @@ void RecordWindow::infoHandler(QString text)
  */
 QString RecordWindow::inputHandler(QString text, QString input, bool &ok)
 {
+    QFont font;
+    font.setPointSize(9);
+
     QInputDialog dialog;
     dialog.setWindowTitle("IVR-Record App");
     dialog.setWindowIcon(QIcon(":/Icons/logo.ico"));
@@ -182,12 +185,10 @@ QString RecordWindow::inputHandler(QString text, QString input, bool &ok)
     dialog.setLabelText(text.toStdString().c_str());
     dialog.setCancelButtonText(tr("Abbrechen"));
     dialog.setTextValue(input);
-    QFont font;
-    font.setPointSize(9);
     dialog.setFont(font);
     dialog.adjustSize();
-    ok = dialog.exec();
 
+    ok = dialog.exec();
     return dialog.textValue();
 }
 

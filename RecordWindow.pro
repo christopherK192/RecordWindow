@@ -29,7 +29,8 @@ SOURCES += \
 
 HEADERS += \
         include/recordwindow.h \
-    include/settingdialog.h
+    include/settingdialog.h \
+    include/messageprinter.h
 
 FORMS += \
         resource/recordwindow.ui \

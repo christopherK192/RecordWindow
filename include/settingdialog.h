@@ -2,11 +2,12 @@
 #define SETTINGDIALOG_H
 
 #include <QFileDialog>
+#include <QLineEdit>
 #include <Windows.h>
 
-#define ICON_CHECK_OK ":/icons/icons/checkOK.svg"
-#define ICON_CHECK_NO ":/icons/icons/checkNO.svg"
-#define ICON_LOGO     ":/icons/icons/logo.ico"
+#define WINDOW_TITLE "IVR-Record App"
+#define ICON_LOGO    ":/icons/icons/logo.ico"
+#define SAVE_FILE    "settings.sav"
 
 
 namespace Ui {
@@ -21,39 +22,9 @@ public:
     explicit SettingDialog(QWidget *parent = nullptr);
     ~SettingDialog();
 
-    enum ReturnState{ACCEPT = 0,
-                     REJECT
-                    };
-
     enum Hotkeys{RECORDING_START = 0,
                  RECORDING_STOP
                 };
-
-    enum SettingList{NUMBER_CAMS = 0,
-                     VIDEO_DIR_1,
-                     VIDEO_CONTAINER_1,
-                     VIDEO_DIR_2,
-                     VIDEO_CONTAINER_2,
-                     VIDEO_PLAYER,
-                     STREAMER_ENABLED,
-                     VIDEO_STREAMER,
-                     HOTKEY_START,
-                     HOTKEY_STOP,
-                     NUMBER_SETTINGS
-                    };
-
-    QStringList SettingText{"NUMBER_CAMS",
-                            "VIDEO_DIR_1",
-                            "VIDEO_CONTAINER_1",
-                            "VIDEO_DIR_2",
-                            "VIDEO_CONTAINER_2",
-                            "VIDEO_PLAYER",
-                            "STREAMER_ENABLED",
-                            "VIDEO_STREAMER",
-                            "HOTKEY_START",
-                            "HOTKEY_STOP",
-                            "NUMBER_SETTINGS"
-                           };
 
     const QStringList VIDEO_CONTAINERS = {"Advanced Streaming Format (*.asf, *.wmv, *.wma)",
                                           "Audio Video Interleave (*.avi)",
@@ -78,42 +49,49 @@ public:
 private:
     static BOOL CALLBACK getOpenWindows(HWND window, LPARAM param);
     QStringList extractFormat(QString videoContainer);
-    void recordHotkey();
+    bool recordHotkey(QLineEdit* hotkey);
 
 private slots:
     void loadSettings();
     void saveSettings();
-    void closeSettings(SettingDialog::ReturnState state);
+    void closeSettings(QPushButton *button);
 
     // IVR Functions
     void toggleCameras(const int camera);
-    QString setVideoPath(const int camera);
+    void setVideoPath(const int camera);
     void setVideoContainer(const int camera);
-    QString connect2Player();
+    void connect2Player();
 
     // Recording Functions
     void enableStreamer(const int state);
-    QString connect2Streamer();
+    void connect2Streamer();
     void setHotkey(const int hotkey);
 
-private:
-    Ui::SettingDialog *ui;  
+private:   
+    struct IVR_Settings
+    {
+        // IVR variables
+        HWND*       videoPlayer;
+        QStringList videoContainer1;
+        QStringList videoContainer2;
+        QString     videoPlayerName;
+        QString     videoPath1;
+        QString     videoPath2;
+        int         numberCams;
 
-    // IVR variables
-    HWND*       m_pVideoPlayer;
-    QStringList m_slVideoContainer1;
-    QStringList m_slVideoContainer2;
-    QString     m_sVideoPath1;
-    QString     m_sVideoPath2;
-    int         m_nNumberCamers;
+        // Recording variables
+        HWND*   videoStreamer;
+        QString videoStreamerName;
+        QString hotkeyStart;
+        QString hotkeyStop;
+        bool    useStreamer;
+    };
 
-    // Recording variables
-    HWND*   m_pVideoStreamer;
-    QString m_sHotkeyStart;
-    QString m_sHotkeyStop;
-    bool    m_bUseStreamer;
+    Ui::SettingDialog *ui;
+    IVR_Settings m_SettingsIVR;
 
-
+public:
+    const IVR_Settings Settings(){return m_SettingsIVR;}
 };
 
 #endif // SETTINGDIALOG_H

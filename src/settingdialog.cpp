@@ -1,12 +1,8 @@
 #include "include/settingdialog.h"
+#include "include/messageprinter.h"
 #include "ui_settingdialog.h"
 
-#include <QMessageBox>
 #include <QTextStream>
-//#include <QSettings>
-
-class RecordWindow;
-
 
 /*!
  * \brief SettingDialog::SettingDialog
@@ -60,28 +56,23 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->comboBox_videoPlayer->addItems(windowList);
 
     // get saved settings
-//    loadSettings();
+    loadSettings();
 
-//    // connect signals to buttons
-//    connect(ui->button_videoStreamer, &QToolButton::clicked, this, SettingDialog::connect2Streamer);
-//    connect(ui->button_videoPlayer,   &QToolButton::clicked, this, SettingDialog::connect2Player);
+    // connect signals to buttons
+    connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &SettingDialog::closeSettings);
 
-//    connect(ui->radioButton_Kamera1, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(false);});
-//    connect(ui->radioButton_Kamera2, &QRadioButton::clicked, [this](){SettingDialog::toggleCams(true);});
+    connect(ui->radioButton_Kamera1, &QRadioButton::clicked, [this](){SettingDialog::toggleCameras(1);});
+    connect(ui->radioButton_Kamera2, &QRadioButton::clicked, [this](){SettingDialog::toggleCameras(2);});
+    connect(ui->button_videoPath1, &QToolButton::clicked, [this](){SettingDialog::setVideoPath(1);});
+    connect(ui->button_videoPath2, &QToolButton::clicked, [this](){SettingDialog::setVideoPath(2);});
+    connect(ui->comboBox_videoContainer1, &QComboBox::currentTextChanged, [this](){SettingDialog::setVideoContainer(1);});
+    connect(ui->comboBox_videoContainer2, &QComboBox::currentTextChanged, [this](){SettingDialog::setVideoContainer(2);});
+    connect(ui->button_videoPlayer, &QToolButton::clicked, this, &SettingDialog::connect2Player);
 
-//    connect(ui->button_videoPath1, &QToolButton::clicked, [this](){SettingDialog::setPath(1);});
-//    connect(ui->button_videoPath2, &QToolButton::clicked, [this](){SettingDialog::setPath(2);});
-
-//    connect(ui->comboBox_videoContainer1, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer1);
-//    connect(ui->comboBox_videoContainer2, &QComboBox::currentTextChanged, this, &SettingDialog::setVideoContainer2);
-
-//    connect(ui->checkBox_videoStreamer, &QCheckBox::stateChanged, this, &SettingDialog::toggleStreamer);
-
-    connect(ui->buttonBox, &QDialogButtonBox::accepted, [this](){SettingDialog::closeSettings(ReturnState::ACCEPT);});
-    connect(ui->buttonBox, &QDialogButtonBox::rejected, [this](){SettingDialog::closeSettings(ReturnState::REJECT);});
-
-//    toggleCams(false);
-//    toggleStreamer(Qt::CheckState::Unchecked);
+    connect(ui->checkBox_videoStreamer, &QCheckBox::stateChanged, this, &SettingDialog::enableStreamer);
+    connect(ui->button_videoStreamer, &QToolButton::clicked, this, &SettingDialog::connect2Streamer);
+    connect(ui->button_hotkeyStart, &QRadioButton::clicked, [this](){SettingDialog::setHotkey(Hotkeys::RECORDING_START);});
+    connect(ui->button_hotkeyStop, &QRadioButton::clicked, [this](){SettingDialog::setHotkey(Hotkeys::RECORDING_STOP);});
 }
 
 /*!
@@ -109,8 +100,8 @@ BOOL CALLBACK SettingDialog::getOpenWindows(HWND window, LPARAM param)
     const int titleSize = 1024;
     char windowTitle[titleSize];
 
-    GetClassNameA(window, windowTitle, titleSize);
-//    GetWindowTextA(window, windowTitle, titleSize);
+//    GetClassNameA(window, windowTitle, titleSize);
+    GetWindowTextA(window, windowTitle, titleSize);
     QString title = QString::fromUtf8(windowTitle);
 
     if(IsWindow(window) && IsWindowVisible(window) && !title.isEmpty())
@@ -140,10 +131,13 @@ QStringList SettingDialog::extractFormat(QString videoContainer)
 
 /*!
  * \brief SettingDialog::recordHotkey
- *        Extracts the video format from the combobox item.
+ *        Transforms keyinputs into a hotkey sequenz.
+ *
+ * \param hotkey [in] line edit of the hotkey to be recorded.
  */
-void SettingDialog::recordHotkey()
+bool SettingDialog::recordHotkey(QLineEdit* hotkey)
 {
+    return true;
 }
 
 /*!
@@ -154,122 +148,44 @@ void SettingDialog::recordHotkey()
  */
 void SettingDialog::loadSettings()
 {
-    m_bEnableMessages = false;
+    QFile saveFile(QDir::currentPath() + SAVE_FILE);
 
-    QSettings settings("CHK-Soft", "IVR-Record App");
-    settings.beginGroup("IVRsettings");
-
-    // video streamer if open
-    const QString video_Streamer = settings.value("videoStreamer", "-").toString();
-    if(!video_Streamer.isEmpty())
+    if(saveFile.open(QIODevice::ReadOnly))
     {
-        int index = ui->comboBox_videoStreamer->findText(video_Streamer, Qt::MatchExactly);
-        ui->comboBox_videoStreamer->setCurrentIndex(index);
-        connect2Streamer(false);
-    }
-    else
-    {
-        m_sVideoStreamer = "";
-        ui->comboBox_videoStreamer->setCurrentIndex(0);
-    }
+        QTextStream saveStream(&saveFile);
+        QString line;
 
-    // video player if open
-    const QString video_Player = settings.value("videoPlayer", "-").toString();
-    if(!video_Player.isEmpty())
-    {
-        int index = ui->comboBox_videoPlayer->findText(video_Player, Qt::MatchExactly);
-        ui->comboBox_videoPlayer->setCurrentIndex(index);
-        connect2Player(false);
-    }
-    else
-    {
-        m_sVideoPlayer = "";
-        ui->comboBox_videoPlayer->setCurrentIndex(0);
-    }
+        saveStream.readLineInto(&line);
+        toggleCameras(line.split("::")[-1].toInt());
 
-    // savepath1 if existing
-    const QString save_Path1 = settings.value("savePath1", "").toString();
-    if(!save_Path1.isEmpty())
-    {
-        ui->lineEdit_videoPath1->setText(save_Path1);
+        saveStream.readLineInto(&line);
+        ui->lineEdit_videoPath1->setText(line.split("::")[-1]);
+
+        saveStream.readLineInto(&line);
+        ui->comboBox_videoContainer1->setCurrentIndex(line.split("::")[-1].toInt());
+
+        if(ui->groupBox_Kamera2->isEnabled())
+        {
+            saveStream.readLineInto(&line);
+            ui->lineEdit_videoPath2->setText(line.split("::")[-1]);
+
+            saveStream.readLineInto(&line);
+            ui->comboBox_videoContainer2->setCurrentIndex(line.split("::")[-1].toInt());
+        }
+
+        saveStream.readLineInto(&line);
+        enableStreamer(line.split("::")[-1].toInt());
+
+        saveStream.readLineInto(&line);
+        ui->lineEdit_hotkeyStart->setText(line.split("::")[-1]);
+
+        saveStream.readLineInto(&line);
+        ui->lineEdit_hotkeyStop->setText(line.split("::")[-1]);
+
+        saveFile.close();
+        MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen wurden erfolgreich geladen."));
     }
-    else
-    {
-        ui->lineEdit_videoPath1->setText("");
-    }
-
-    m_sSavePath1 = ui->lineEdit_videoPath1->text();
-
-    // savepath2 if existing
-    const QString save_Path2 = settings.value("savePath2", "").toString();
-    if(!save_Path2.isEmpty())
-    {
-        ui->lineEdit_videoPath2->setText(save_Path2);
-    }
-    else
-    {
-        ui->lineEdit_videoPath2->setText("");
-    }
-
-    m_sSavePath2 = ui->lineEdit_videoPath2->text();
-
-    // video_container1
-    const QString video_container1 = settings.value("videoContainer1", "").toString();
-    if(!video_container1.isEmpty())
-    {
-        int index = ui->comboBox_videoContainer1->findText(video_container1, Qt::MatchExactly);
-        ui->comboBox_videoContainer1->setCurrentIndex(index);
-    }
-    else
-    {
-        ui->comboBox_videoContainer1->setCurrentIndex(0);
-    }
-
-    m_sVideoContainer1 = ui->comboBox_videoContainer1->currentText();
-
-    // video_container2
-    const QString video_container2 = settings.value("videoContainer2", "").toString();
-    if(!video_container2.isEmpty())
-    {
-        int index = ui->comboBox_videoContainer2->findText(video_container2, Qt::MatchExactly);
-        ui->comboBox_videoContainer2->setCurrentIndex(index);
-    }
-    else
-    {
-        ui->comboBox_videoContainer2->setCurrentIndex(0);
-    }
-
-    m_sVideoContainer1 = ui->comboBox_videoContainer2->currentText();
-
-    // hotkeyStart if existing
-    const QString hotkey_start = settings.value("hotkeyStart", "").toString();
-    if(!hotkey_start.isEmpty())
-    {
-        ui->lineEdit_hotkeyStart->setText(hotkey_start);
-    }
-    else
-    {
-        ui->lineEdit_hotkeyStart->setText("");
-    }
-
-    m_sHotkeyStart = ui->lineEdit_hotkeyStart->text();
-
-    // hotkeyStop if existing
-    const QString hotkey_stop = settings.value("hotkeyStop", "").toString();
-    if(!hotkey_start.isEmpty())
-    {
-        ui->lineEdit_hotkeyStop->setText(hotkey_stop);
-    }
-    else
-    {
-        ui->lineEdit_hotkeyStop->setText("");
-    }
-
-    m_sHotkeyStop = ui->lineEdit_hotkeyStop->text();
-
-    settings.endGroup();
-
-    m_bEnableMessages = true;
+    MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen konnten nicht geladen werden."));
 }
 
 /*!
@@ -280,36 +196,50 @@ void SettingDialog::loadSettings()
  */
 void SettingDialog::saveSettings()
 {
-    QFile saveFile(QDir::currentPath() + "/savefiles/settings.sav");
+    QFile saveFile(QDir::currentPath() + SAVE_FILE);
 
     if(saveFile.open(QIODevice::WriteOnly))
     {
         QTextStream saveStream(&saveFile);
 
+        saveStream << "NUMBER_CAMS::"       << m_SettingsIVR.numberCams                     << endl
+                   << "VIDEO_DIR_1::"       << m_SettingsIVR.videoPath1                     << endl
+                   << "VIDEO_CONTAINER_1::" << ui->comboBox_videoContainer1->currentIndex() << endl
+                   << "VIDEO_DIR_2::"       << m_SettingsIVR.videoPath2                     << endl
+                   << "VIDEO_CONTAINER_2::" << ui->comboBox_videoContainer2->currentIndex() << endl
+                   << "STREAMER_ENABLED::"  << m_SettingsIVR.useStreamer                    << endl
+                   << "HOTKEY_START::"      << m_SettingsIVR.hotkeyStart                    << endl
+                   << "HOTKEY_STOP::"       << m_SettingsIVR.hotkeyStop                     << endl;
+
         saveFile.close();
-       tr("Einstellungen wurden erfolgreich gespeichert.");
+        MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen wurden erfolgreich gespeichert."));
     }
-    tr("FEHLER:\nEinstellungen konnten nicht gespeichert werden.");
+    MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen konnten nicht gespeichert werden."));
 }
 
 /*!
  * \brief SettingDialog::closeSettings
- *        Writes settings and returns accepted or rejected.
- * \param mode Mode of the return (accepted or rejected)
+ *        Writes settings or emits accepted or rejected.
+ *
+ * \param button [in] pointer of the pressed button.
  */
-void SettingDialog::closeSettings(ReturnState state)
+void SettingDialog::closeSettings(QPushButton *button)
 {
-    switch(state)
+    if(ui->buttonBox->button(QDialogButtonBox::Ok) == button)
     {
-        case ReturnState::ACCEPT:
-            saveSettings();
-
-            emit accept();
-            break;
-
-        case ReturnState::REJECT:
-            emit reject();
-            break;
+        emit accept();
+    }
+    else if(ui->buttonBox->button(QDialogButtonBox::Cancel) == button)
+    {
+        emit reject();
+    }
+    else if(ui->buttonBox->button(QDialogButtonBox::Save) == button)
+    {
+        saveSettings();
+    }
+    else
+    {
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Unerwarteter Knopf gedrückt!"));
     }
 }
 
@@ -326,7 +256,7 @@ void SettingDialog::closeSettings(ReturnState state)
  */
 void SettingDialog::toggleCameras(const int camera)
 {
-    m_nNumberCamers = camera;
+    m_SettingsIVR.numberCams = camera;
     ui->groupBox_Kamera2->setEnabled(camera == 2);
 }
 
@@ -337,7 +267,7 @@ void SettingDialog::toggleCameras(const int camera)
  *
  * \param camera [in] Sets the path for camera number camera.
  */
-QString SettingDialog::setVideoPath(const int camera)
+void SettingDialog::setVideoPath(const int camera)
 {
     QString* path = nullptr;
     QLineEdit* pathLineEdit = nullptr;
@@ -345,13 +275,19 @@ QString SettingDialog::setVideoPath(const int camera)
     switch(camera)
     {
         case 1:
-            path = &m_sVideoPath1;
+            path = &m_SettingsIVR.videoPath1;
             pathLineEdit= ui->lineEdit_videoPath1;
             break;
         case 2:
-            path = &m_sVideoPath2;
+            path = &m_SettingsIVR.videoPath2;
             pathLineEdit = ui->lineEdit_videoPath2;
-            break;
+            break;        
+    }
+
+    if(path == nullptr)
+    {
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Unerwartete Pfadfehler!"));
+        return;
     }
 
     QString savepath = QFileDialog::getExistingDirectory(this, tr("Ordner Öffnen"), *path,
@@ -360,13 +296,13 @@ QString SettingDialog::setVideoPath(const int camera)
 
     if(savepath.isEmpty())
     {
-        return tr("FEHLER:\nEs wurde kein Ordner ausgewählt!\nBitte wählen Sie einen Ordner aus!");
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                 tr("Es wurde kein Ordner ausgewählt!\nBitte wählen Sie einen Ordner aus!"));
+        return;
     }
 
     pathLineEdit->setText(savepath);
     *path = pathLineEdit->text();
-
-    return "";
 }
 
 /*!
@@ -380,10 +316,10 @@ void SettingDialog::setVideoContainer(const int camera)
     switch(camera)
     {
         case 1:
-            m_slVideoContainer1 = extractFormat(ui->comboBox_videoContainer1->currentText());
+            m_SettingsIVR.videoContainer1 = extractFormat(ui->comboBox_videoContainer1->currentText());
             break;
         case 2:
-            m_slVideoContainer2 = extractFormat(ui->comboBox_videoContainer2->currentText());
+            m_SettingsIVR.videoContainer2 = extractFormat(ui->comboBox_videoContainer2->currentText());
             break;
     }
 }
@@ -392,14 +328,16 @@ void SettingDialog::setVideoContainer(const int camera)
  * \brief SettingDialog::connect2Player
  *        Extract the window handle for the video player.
  */
-QString SettingDialog::connect2Player()
+void SettingDialog::connect2Player()
 {
-    m_pVideoPlayer = nullptr;
+    m_SettingsIVR.videoPlayer = nullptr;
     QString player = ui->comboBox_videoPlayer->currentText();
 
     if (player == "-" || player.isEmpty())
     {
-        return tr("FEHLER:\nEs wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!");
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                 tr("Es wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!"));
+        return;
     }
 
     //HWND windowHandler = FindWindowA(player.toStdString().c_str(), nullptr);
@@ -407,11 +345,16 @@ QString SettingDialog::connect2Player()
 
     if(windowHandler == nullptr)
     {
-        return tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!");
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                 tr("Es konnte keine Instanz des angegebenen Programms gefunden werden!\n\
+                                    Bitte überprüfen Sie, ob das Programm geöffnet ist!"));
+        return;
     }
 
-    m_pVideoPlayer = &windowHandler;
-    return tr("Verbindung mit dem Programm wurde erfolgreich hergestellt.");
+    m_SettingsIVR.videoPlayer = &windowHandler;
+    m_SettingsIVR.videoPlayerName = player;
+
+    MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Verbindung mit dem Programm wurde erfolgreich hergestellt."));
 }
 
 
@@ -428,34 +371,37 @@ QString SettingDialog::connect2Player()
  */
 void SettingDialog::enableStreamer(const int state)
 {
+    bool* checked = &m_SettingsIVR.useStreamer;
+
     switch(state)
     {
         case Qt::CheckState::Checked:
-            m_bUseStreamer = true;
+            *checked = true;
             break;
         case Qt::CheckState::Unchecked:
-            m_bUseStreamer = false;
+            *checked = false;
             break;
     }
 
-    ui->frame_recorder->setEnabled(m_bUseStreamer);
-    ui->frame_hotkeyStart->setEnabled(m_bUseStreamer);
-    ui->frame_hotkeyStop->setEnabled(m_bUseStreamer);
+    ui->frame_recorder->setEnabled(*checked);
+    ui->frame_hotkeyStart->setEnabled(*checked);
+    ui->frame_hotkeyStop->setEnabled(*checked);
 }
 
 /*!
  * \brief SettingDialog::connect2Streamer
  *        Extract the window handle for the video streamer.
  */
-QString SettingDialog::connect2Streamer()
+void SettingDialog::connect2Streamer()
 {
-    m_pVideoStreamer = nullptr;
+    m_SettingsIVR.videoStreamer = nullptr;
     QString streamer = ui->comboBox_videoStreamer->currentText();
 
     if (streamer == "-" || streamer.isEmpty())
     {
-        dynamic_cast<RecordWindow*>(parentWidget());
-        return tr("FEHLER:\nEs wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!");
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                 tr("Es wurde kein Programm ausgewählt!\nBitte wählen Sie ein Programm aus!"));
+        return;
     }
 
     //HWND windowHandler = FindWindowA(streamer.toStdString().c_str(), nullptr);
@@ -463,11 +409,16 @@ QString SettingDialog::connect2Streamer()
 
     if(windowHandler == nullptr)
     {
-        return tr("FEHLER:\nEs konnte keine Instanz des angegebenen Programms gefunden werden!\nBitte überprüfen Sie, ob das Programm geöffnet ist!");
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                 tr("Es konnte keine Instanz des angegebenen Programms gefunden werden!\n\
+                                    Bitte überprüfen Sie, ob das Programm geöffnet ist!"));
+        return;
     }
 
-    m_pVideoStreamer = &windowHandler;
-    return tr("Verbindung mit dem Programm wurde erfolgreich hergestellt.");
+    m_SettingsIVR.videoStreamer = &windowHandler;
+    m_SettingsIVR.videoStreamerName = streamer;
+
+    MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Verbindung mit dem Programm wurde erfolgreich hergestellt."));
 }
 
 /*!
@@ -484,24 +435,21 @@ void SettingDialog::setHotkey(const int hotkey)
     switch(hotkey)
     {
         case Hotkeys::RECORDING_START:
-            keyCombi = &m_sHotkeyStart;
+            keyCombi = &m_SettingsIVR.hotkeyStart;
             keyLineEdit= ui->lineEdit_hotkeyStart;
             break;
         case Hotkeys::RECORDING_STOP:
-            keyCombi = &m_sHotkeyStop;
+            keyCombi = &m_SettingsIVR.hotkeyStop;
             keyLineEdit = ui->lineEdit_hotkeyStop;
             break;
     }
 
-//    QString savepath = QFileDialog::getExistingDirectory(this, tr("Ordner Öffnen"), *path,
-//                                                         QFileDialog::DontResolveSymlinks |
-//                                                         QFileDialog::ShowDirsOnly);
-
-//    if(savepath.isEmpty())
-//    {
-//        return tr("FEHLER:\nEs wurde kein Ordner ausgewählt!\nBitte wählen Sie einen Ordner aus!");
-//    }
+    if(!recordHotkey(keyLineEdit))
+    {
+        MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Shotcut konnte nicht gesetzt werden! Bitte nochmal versuchen!"));
+    }
 
     *keyCombi = keyLineEdit->text();
+    MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Shotcut wurde erfolgreich gesetzt."));
 }
 
