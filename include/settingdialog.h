@@ -3,11 +3,10 @@
 
 #include <QFileDialog>
 #include <QLineEdit>
+#include <QAbstractButton>
 #include <Windows.h>
 
-#define WINDOW_TITLE "IVR-Record App"
-#define ICON_LOGO    ":/icons/icons/logo.ico"
-#define SAVE_FILE    "settings.sav"
+#define SAVE_FILE "settings.sav"
 
 
 namespace Ui {
@@ -57,6 +56,25 @@ public:
                                           "Video Object (*.vob)",
                                           "WebM (*.webm)"
                                          };
+
+    struct IVR_Settings
+    {
+        // IVR variables
+        HWND*       videoPlayer;
+        QStringList videoContainer1;
+        QStringList videoContainer2;
+        QString     videoPlayerName;
+        QString     videoPath1;
+        QString     videoPath2;
+        int         numberCams;
+
+        // Recording variables
+        HWND*   videoStreamer;
+        QString videoStreamerName;
+        QString hotkeyStart;
+        QString hotkeyStop;
+        bool    useStreamer;
+    };
 
 private:
     /*!
@@ -108,7 +126,7 @@ private slots:
      *
      * \param button [in] pointer of the pressed button.
      */
-    void closeSettings(QPushButton *button);
+    void closeSettings(QAbstractButton* button);
 
     // IVR Functions
     /*!
@@ -161,30 +179,14 @@ private slots:
     void setHotkey(const int hotkey);
 
 private:   
-    struct IVR_Settings
-    {
-        // IVR variables
-        HWND*       videoPlayer;
-        QStringList videoContainer1;
-        QStringList videoContainer2;
-        QString     videoPlayerName;
-        QString     videoPath1;
-        QString     videoPath2;
-        int         numberCams;
-
-        // Recording variables
-        HWND*   videoStreamer;
-        QString videoStreamerName;
-        QString hotkeyStart;
-        QString hotkeyStop;
-        bool    useStreamer;
-    };
+    QString WINDOW_TITLE = "IVR-Record App";
+    QString ICON_LOGO    = ":/icons/icons/logo.ico";
 
     Ui::SettingDialog *ui;
     IVR_Settings m_SettingsIVR;
 
 public:
-    const IVR_Settings Settings(){return m_SettingsIVR;}
+    inline const IVR_Settings Settings(){return m_SettingsIVR;}
 };
 
 #endif // SETTINGDIALOG_H

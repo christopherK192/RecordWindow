@@ -2,6 +2,7 @@
 #define MESSAGEPRINTER_H
 
 #include <QMessageBox>
+#include <QInputDialog>
 #include <QIcon>
 
 namespace MessagePrinter
@@ -14,7 +15,7 @@ namespace MessagePrinter
  * \param iconPath    [in] path to the icon of the message box.
  * \param errorString [in] error message to be displayed.
  */
-void ErrorBox(QString windowTitle, QString iconPath, QString errorString)
+static void ErrorBox(QString windowTitle, QString iconPath, QString errorString)
 {
     QFont font;
     font.setPointSize(9);
@@ -37,7 +38,7 @@ void ErrorBox(QString windowTitle, QString iconPath, QString errorString)
  * \param iconPath      [in] path to the icon of the message box.
  * \param warningString [in] warning message to be displayed.
  */
-bool WarningBox(QString windowTitle, QString iconPath, QString warningString)
+static bool WarningBox(QString windowTitle, QString iconPath, QString warningString)
 {
     QFont font;
     font.setPointSize(9);
@@ -63,7 +64,7 @@ bool WarningBox(QString windowTitle, QString iconPath, QString warningString)
  * \param iconPath    [in] path to the icon of the message box.
  * \param infoString  [in] info message to be displayed.
  */
-void InfoBox(QString windowTitle, QString iconPath, QString infoString)
+static void InfoBox(QString windowTitle, QString iconPath, QString infoString)
 {
     QFont font;
     font.setPointSize(9);
@@ -88,7 +89,7 @@ void InfoBox(QString windowTitle, QString iconPath, QString infoString)
  *
  * \return Entered integer as int.
  */
-QString RecordWindow::inputHandler(QString text, QString input, bool &ok)
+static QString InputHandler(QString text, QString input, bool &ok)
 {
     QFont font;
     font.setPointSize(9);
@@ -98,7 +99,7 @@ QString RecordWindow::inputHandler(QString text, QString input, bool &ok)
     dialog.setWindowIcon(QIcon(":/Icons/logo.ico"));
     dialog.setInputMode(QInputDialog::TextInput);
     dialog.setLabelText(text.toStdString().c_str());
-    dialog.setCancelButtonText(tr("Abbrechen"));
+    dialog.setCancelButtonText(QObject::tr("Abbrechen"));
     dialog.setTextValue(input);
     dialog.setFont(font);
     dialog.adjustSize();

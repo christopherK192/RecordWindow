@@ -3,6 +3,7 @@
 #include "ui_settingdialog.h"
 
 #include <QTextStream>
+#include <QPushButton>
 
 SettingDialog::SettingDialog(QWidget *parent) :
     QDialog(parent),
@@ -167,17 +168,17 @@ void SettingDialog::saveSettings()
     MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen konnten nicht gespeichert werden."));
 }
 
-void SettingDialog::closeSettings(QPushButton *button)
+void SettingDialog::closeSettings(QAbstractButton* button)
 {
-    if(ui->buttonBox->button(QDialogButtonBox::Ok) == button)
+    if(ui->buttonBox->button(QDialogButtonBox::Ok) == dynamic_cast<QPushButton*>(button))
     {
         emit accept();
     }
-    else if(ui->buttonBox->button(QDialogButtonBox::Cancel) == button)
+    else if(ui->buttonBox->button(QDialogButtonBox::Cancel) == dynamic_cast<QPushButton*>(button))
     {
         emit reject();
     }
-    else if(ui->buttonBox->button(QDialogButtonBox::Save) == button)
+    else if(ui->buttonBox->button(QDialogButtonBox::Save) == dynamic_cast<QPushButton*>(button))
     {
         saveSettings();
     }
