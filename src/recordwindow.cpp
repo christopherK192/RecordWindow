@@ -7,15 +7,6 @@
 //#include <QDateTime>
 //#include <QTreeView>
 
-
-/*!
- * \brief RecordWindow::RecordWindow
- *        Constructor of the RecordWindow class
- *
- * The constructor initializes the ui, connects the button signals and initializes the languages.
- *
- * \param parent Parent window of the RecordWindow class.
- */
 RecordWindow::RecordWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::RecordWindow),  
@@ -114,83 +105,12 @@ RecordWindow::RecordWindow(QWidget *parent) :
 //    ui->retranslateUi(this);
 }
 
-/*!
- * \brief RecordWindow::~RecordWindow
- *        Destructor.
- */
 RecordWindow::~RecordWindow()
 {
     delete ui;
 }
 
-/*!
- * \brief SettingDialog::errorHandler
- *        Opens a Message Box with an error message.
- *
- * \param text The text of the error message.
- */
-void RecordWindow::errorHandler(QString text)
-{
-    QMessageBox message;
-    message.setWindowTitle("IVR-Record App");
-    message.setWindowIcon(QIcon(":/Icons/logo.ico"));
-    message.setIcon(QMessageBox::Critical);
-    message.setDefaultButton(QMessageBox::Ok);
-    message.setText(text.toStdString().c_str());
-    QFont font;
-    font.setPointSize(9);
-    message.setFont(font);
-    message.exec();
-}
 
-/*!
- * \brief RecordWindow::infoHandler
- *        Opens Message Box with an info message.
- *
- * \param text The text of the info message.
- */
-void RecordWindow::infoHandler(QString text)
-{
-    QMessageBox message;
-    message.setWindowTitle("IVR-Record App");
-    message.setWindowIcon(QIcon(":/Icons/logo.ico"));
-    message.setIcon(QMessageBox::Information);
-    message.setDefaultButton(QMessageBox::Ok);
-    message.setText(text.toStdString().c_str());
-    QFont font;
-    font.setPointSize(9);
-    message.setFont(font);
-    message.exec();
-}
-
-/*!
- * \brief RecordWindow::inputHandler
- *        Opens an Input Dialog for text input.
- *
- * \param text A displayed info text.
- * \param input A preselected input value.
- * \param ok The window return value.
- *
- * \return Entered integer as int.
- */
-QString RecordWindow::inputHandler(QString text, QString input, bool &ok)
-{
-    QFont font;
-    font.setPointSize(9);
-
-    QInputDialog dialog;
-    dialog.setWindowTitle("IVR-Record App");
-    dialog.setWindowIcon(QIcon(":/Icons/logo.ico"));
-    dialog.setInputMode(QInputDialog::TextInput);
-    dialog.setLabelText(text.toStdString().c_str());
-    dialog.setCancelButtonText(tr("Abbrechen"));
-    dialog.setTextValue(input);
-    dialog.setFont(font);
-    dialog.adjustSize();
-
-    ok = dialog.exec();
-    return dialog.textValue();
-}
 
 /*!
  * \brief RecordWindow::loadLanguage
@@ -355,23 +275,23 @@ void RecordWindow::openSettings()
         return;
     }
 
-    mb_Kameras2    = dialog.Kameras2();
-    mo_savePath1 = QDir(dialog.savePath1());
-    ml_videoContainer1 = dialog.videoContainer1();
-    if(mb_Kameras2)
-    {
-        mo_savePath2 = QDir(dialog.savePath2());
-        ml_videoContainer2 = dialog.videoContainer2();
-    }
+//    mb_Kameras2    = dialog.Kameras2();
+//    mo_savePath1 = QDir(dialog.savePath1());
+//    ml_videoContainer1 = dialog.videoContainer1();
+//    if(mb_Kameras2)
+//    {
+//        mo_savePath2 = QDir(dialog.savePath2());
+//        ml_videoContainer2 = dialog.videoContainer2();
+//    }
 
-    ms_videoPlayer = dialog.videoPlayer();
-    mb_useStreamer = dialog.useStreamer();
-    if(mb_useStreamer)
-    {
-        ms_videoStreamer = dialog.videoStreamer();
-        ms_hotkeyStart = dialog.hotkeyStart();
-        ms_hotkeyStop = dialog.hotkeyStop();
-    }
+//    ms_videoPlayer = dialog.videoPlayer();
+//    mb_useStreamer = dialog.useStreamer();
+//    if(mb_useStreamer)
+//    {
+//        ms_videoStreamer = dialog.videoStreamer();
+//        ms_hotkeyStart = dialog.hotkeyStart();
+//        ms_hotkeyStop = dialog.hotkeyStop();
+//    }
 
     // get window handle from name
     mo_StreamerWindow = FindWindowA(nullptr, ms_videoStreamer.toStdString().c_str());
@@ -495,12 +415,6 @@ void RecordWindow::stopVideo()
     keybd_event(VK_F4, 0, WM_KEYUP, 0);
 }
 
-/*!
- * \brief RecordWindow::openVideo
- *        Plays the clicked video using the default system video player.
- *
- * \param index Rowindex of the filepath model (correlates to a video file)
- */
 void RecordWindow::openVideo1(const QModelIndex &index)
 {
     QModelIndex indexSource = mp_proxymodel1->mapToSource(index);

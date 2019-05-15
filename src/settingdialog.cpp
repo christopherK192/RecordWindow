@@ -4,15 +4,6 @@
 
 #include <QTextStream>
 
-/*!
- * \brief SettingDialog::SettingDialog
- *        Constructor of the SettingDialog class
- *
- * The constructor initializes the ui, connects the button signals and loads the settings.
- * Additionally it iterates over all open windows and gets the list of all open window names.
- *
- * \param parent Parent window of the SettingDialog class (inherits form QDialog).
- */
 SettingDialog::SettingDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingDialog)
@@ -75,26 +66,11 @@ SettingDialog::SettingDialog(QWidget *parent) :
     connect(ui->button_hotkeyStop, &QRadioButton::clicked, [this](){SettingDialog::setHotkey(Hotkeys::RECORDING_STOP);});
 }
 
-/*!
- * \brief SettingDialog::~SettingDialog
- *        Destructor
- */
 SettingDialog::~SettingDialog()
 {
     delete ui;
 }
 
-/*!
- * \brief SettingDialog::getOpenWindows
- *        Callback function for each open window.
- *
- * Extracts the window name of each window and stores them in a list.
- *
- * \param window [in]  Window Handle of the current Window.
- * \param param  [out] In this case it's the list of all window names.
- *
- * \return Returns true if successful.
- */
 BOOL CALLBACK SettingDialog::getOpenWindows(HWND window, LPARAM param)
 {
     const int titleSize = 1024;
@@ -113,14 +89,6 @@ BOOL CALLBACK SettingDialog::getOpenWindows(HWND window, LPARAM param)
     return true;
 }
 
-/*!
- * \brief SettingDialog::extractFormat
- *        Extracts the video format from the combobox item.
- *
- * \param videoContainer [in] combobox item.
- *
- * \return Returns list of video formats.
- */
 QStringList SettingDialog::extractFormat(QString videoContainer)
 {
     QStringList list;
@@ -129,23 +97,11 @@ QStringList SettingDialog::extractFormat(QString videoContainer)
     return list;
 }
 
-/*!
- * \brief SettingDialog::recordHotkey
- *        Transforms keyinputs into a hotkey sequenz.
- *
- * \param hotkey [in] line edit of the hotkey to be recorded.
- */
 bool SettingDialog::recordHotkey(QLineEdit* hotkey)
 {
     return true;
 }
 
-/*!
- * \brief SettingDialog::loadSettings
- *        Reads the saved settings when constructed.
- *
- * Settings: Windowname of the last selected video streamer and video player as well as the savepaths, videocontainers and hotkeys.
- */
 void SettingDialog::loadSettings()
 {
     QFile saveFile(QDir::currentPath() + SAVE_FILE);
@@ -188,12 +144,6 @@ void SettingDialog::loadSettings()
     MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen konnten nicht geladen werden."));
 }
 
-/*!
- * \brief SettingDialog::writeSettings
- *        Saves the current settings when closed.
- *
- * Settings: Windowname of the last selected video streamer and video player as well as the savepaths, videocontainers and hotkeys.
- */
 void SettingDialog::saveSettings()
 {
     QFile saveFile(QDir::currentPath() + SAVE_FILE);
@@ -217,12 +167,6 @@ void SettingDialog::saveSettings()
     MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen konnten nicht gespeichert werden."));
 }
 
-/*!
- * \brief SettingDialog::closeSettings
- *        Writes settings or emits accepted or rejected.
- *
- * \param button [in] pointer of the pressed button.
- */
 void SettingDialog::closeSettings(QPushButton *button)
 {
     if(ui->buttonBox->button(QDialogButtonBox::Ok) == button)
@@ -247,26 +191,12 @@ void SettingDialog::closeSettings(QPushButton *button)
  * IVR Functions
  **************************************************
  */
-
-/*!
- * \brief SettingDialog::toggleCameras
- *        Toggles number of cameras.
- *
- * \param camera [in] number of cameras to be used.
- */
 void SettingDialog::toggleCameras(const int camera)
 {
     m_SettingsIVR.numberCams = camera;
     ui->groupBox_Kamera2->setEnabled(camera == 2);
 }
 
-/*!
- * \brief SettingDialog::setVideoPath
- *        Gets and sets the savepath over the File Dialog.
- *        Called by [...]-button.
- *
- * \param camera [in] Sets the path for camera number camera.
- */
 void SettingDialog::setVideoPath(const int camera)
 {
     QString* path = nullptr;
@@ -305,12 +235,6 @@ void SettingDialog::setVideoPath(const int camera)
     *path = pathLineEdit->text();
 }
 
-/*!
- * \brief SettingDialog::setVideoContainer
- *        Sets the videoContainer by change of comboBox item;
- *
- * \param camera [in] gets video container for camera number camera.
- */
 void SettingDialog::setVideoContainer(const int camera)
 {
     switch(camera)
@@ -324,10 +248,6 @@ void SettingDialog::setVideoContainer(const int camera)
     }
 }
 
-/*!
- * \brief SettingDialog::connect2Player
- *        Extract the window handle for the video player.
- */
 void SettingDialog::connect2Player()
 {
     m_SettingsIVR.videoPlayer = nullptr;
@@ -362,13 +282,6 @@ void SettingDialog::connect2Player()
  * Recording Functions
  **************************************************
  */
-
-/*!
- * \brief SettingDialog::toggleStreamer
- *        Toggles state of the checkbox and enables or disables videostreamer options.
- *
- * \param state [in] State of the checkbox (Checked, Unchecked).
- */
 void SettingDialog::enableStreamer(const int state)
 {
     bool* checked = &m_SettingsIVR.useStreamer;
@@ -388,10 +301,6 @@ void SettingDialog::enableStreamer(const int state)
     ui->frame_hotkeyStop->setEnabled(*checked);
 }
 
-/*!
- * \brief SettingDialog::connect2Streamer
- *        Extract the window handle for the video streamer.
- */
 void SettingDialog::connect2Streamer()
 {
     m_SettingsIVR.videoStreamer = nullptr;
@@ -421,12 +330,6 @@ void SettingDialog::connect2Streamer()
     MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Verbindung mit dem Programm wurde erfolgreich hergestellt."));
 }
 
-/*!
- * \brief SettingDialog::setHotkey
- *        Records a hotkey.
- *
- * \param hotkey [in] Hotkey to be recorded.
- */
 void SettingDialog::setHotkey(const int hotkey)
 {
     QString* keyCombi = nullptr;

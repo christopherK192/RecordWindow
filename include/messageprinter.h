@@ -7,8 +7,8 @@
 namespace MessagePrinter
 {
 /*!
- * \brief MessagePrinter::ErrorBox
- *        Opens a Message Box with an error message.
+ * MessagePrinter::ErrorBox
+ * Opens a Message Box with an error message.
  *
  * \param windowTitle [in] title of the message box.
  * \param iconPath    [in] path to the icon of the message box.
@@ -30,8 +30,8 @@ void ErrorBox(QString windowTitle, QString iconPath, QString errorString)
 }
 
 /*!
- * \brief MessagePrinter::WarningBox
- *        Opens a Message Box with an warning message.
+ * MessagePrinter::WarningBox
+ * Opens a Message Box with an warning message.
  *
  * \param windowTitle   [in] title of the message box.
  * \param iconPath      [in] path to the icon of the message box.
@@ -56,8 +56,8 @@ bool WarningBox(QString windowTitle, QString iconPath, QString warningString)
 }
 
 /*!
- * \brief MessagePrinter::InfoBox
- *        Opens Message Box with an info message.
+ * MessagePrinter::InfoBox
+ * Opens Message Box with an info message.
  *
  * \param windowTitle [in] title of the message box.
  * \param iconPath    [in] path to the icon of the message box.
@@ -76,6 +76,35 @@ void InfoBox(QString windowTitle, QString iconPath, QString infoString)
     message.setText(infoString.toStdString().c_str());
     message.setFont(font);
     message.exec();
+}
+
+/*!
+ * MessagePrinter::inputHandler
+ * Opens an Input Dialog for text input.
+ *
+ * \param text A displayed info text.
+ * \param input A preselected input value.
+ * \param ok The window return value.
+ *
+ * \return Entered integer as int.
+ */
+QString RecordWindow::inputHandler(QString text, QString input, bool &ok)
+{
+    QFont font;
+    font.setPointSize(9);
+
+    QInputDialog dialog;
+    dialog.setWindowTitle("IVR-Record App");
+    dialog.setWindowIcon(QIcon(":/Icons/logo.ico"));
+    dialog.setInputMode(QInputDialog::TextInput);
+    dialog.setLabelText(text.toStdString().c_str());
+    dialog.setCancelButtonText(tr("Abbrechen"));
+    dialog.setTextValue(input);
+    dialog.setFont(font);
+    dialog.adjustSize();
+
+    ok = dialog.exec();
+    return dialog.textValue();
 }
 
 }
