@@ -153,26 +153,6 @@ void RecordWindow::set_videoName()
 
     ms_videoFile = (fightnr + "." + QString::number(mi_ivrCounter) + videoFormat.toString());
     mo_savePath1.rename(oldName, ms_videoFile);
-
-    if(!(mi_numCams == 2))
-    {
-        mo_savePath2.setFilter(QDir::Files | QDir::NoSymLinks);
-        mo_savePath2.setNameFilters(QStringList(ml_videoContainer2));
-        mo_savePath2.setSorting(QDir::Time);
-
-        QStringList fileList2 = mo_savePath2.entryList();
-        if(fileList2.isEmpty())
-        {
-            MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                     tr("Keine abspielbare Datei gefunden!\nBitte kontrollieren Sie den Pfad!"));
-            ms_videoFile = "";
-            return;
-        }
-
-        // rename the video file
-        QString oldName2 = QString(fileList.first());
-        mo_savePath2.rename(oldName2, ms_videoFile);
-    }
 }
 
 void RecordWindow::loadLanguage(const QString &language)
@@ -245,7 +225,7 @@ void RecordWindow::openSettings()
     SettingDialog::IVR_Settings settings = dialog.Settings();
 
     // get IVR variables
-    mp_PlayerWindow    = settings.videoPlayer;
+//    mp_PlayerWindow    = settings.videoPlayer;
     mi_numCams         = settings.numberCams;
 
     mo_savePath1       = QDir(settings.videoPath1);
@@ -262,14 +242,10 @@ void RecordWindow::openSettings()
 
     if(mb_useStreamer)
     {
-        mp_StreamerWindow = settings.videoStreamer;
+//        mp_StreamerWindow = settings.videoStreamer;
         ms_hotkeyStart    = settings.hotkeyStart;
         ms_hotkeyStop     = settings.hotkeyStop;
     }
-
-    // get window handle from name
-//    mp_StreamerWindow = FindWindowA(nullptr, ms_videoStreamer.toStdString().c_str());
-//    mp_PlayerWindow = FindWindowA(nullptr, ms_videoPlayer.toStdString().c_str());
 
     // setting the displayed folder to the video folder
     mp_filemodel1->setRootPath(mo_savePath1.absolutePath());
@@ -282,12 +258,18 @@ void RecordWindow::openSettings()
         // setting the displayed folder to the video folder
         mp_filemodel2->setRootPath(mo_savePath2.absolutePath());
         ui->treeView_folder2->setRootIndex(mp_proxymodel2->mapFromSource(mp_filemodel2->index(mo_savePath2.absolutePath())));
-        mp_filemodel2->setNameFilters(QStringList(ml_videoContainer1));
+        mp_filemodel2->setNameFilters(QStringList(ml_videoContainer2));
         ui->treeView_folder2->setColumnWidth(0, 150);
     }
 
     ui->tabWidget->setTabEnabled(1, mi_numCams == 2);
     ui->frame_recording->setEnabled(mb_useStreamer);
+
+    // get window handle from name
+    ms_videoStreamer = settings.videoStreamerName;
+    ms_videoPlayer = settings.videoPlayerName;
+    mp_StreamerWindow = FindWindowA(nullptr, ms_videoStreamer.toStdString().c_str());
+    mp_PlayerWindow = FindWindowA(nullptr, ms_videoPlayer.toStdString().c_str());
 }
 
 void RecordWindow::freezeWindow(bool set)
@@ -295,6 +277,7 @@ void RecordWindow::freezeWindow(bool set)
     setWindowFlag(Qt::FramelessWindowHint, set);
     show();
     ui->actionFreeze->setChecked(set);
+    ui->actionSet_Toplevel->setEnabled(!set);
 }
 
 void RecordWindow::setTopevel(bool set)
@@ -322,12 +305,15 @@ void RecordWindow::startstopRecord()
         return;
     }
 
-    SetFocus(*mp_StreamerWindow);
+//    SetFocus(mp_StreamerWindow);
 
     if(mb_recording)
     {
-        SendMessageA(*mp_StreamerWindow, WM_KEYDOWN, 0x53, 0);
-        SendMessageA(*mp_StreamerWindow, WM_KEYUP, 0x53, 0);
+
+        PostMessageA(mp_StreamerWindow, WM_KEYDOWN, 'S', 0);
+        PostMessageA(mp_StreamerWindow, WM_KEYUP, 'S', 0);
+//        SendMessageA(mp_StreamerWindow, WM_KEYDOWN, int('S'), 0);
+//        SendMessageA(mp_StreamerWindow, WM_KEYUP, int('S'), 0);
 
         ui->button_record->setText(tr("Starten"));
         ui->label_record->setEnabled(false);
@@ -342,8 +328,10 @@ void RecordWindow::startstopRecord()
     }
     else
     {
-        SendMessageA(*mp_StreamerWindow, WM_KEYDOWN, 0x53, 0);
-        SendMessageA(*mp_StreamerWindow, WM_KEYUP, 0x53, 0);
+        PostMessageA(mp_StreamerWindow, WM_KEYDOWN, 'S', 0);
+        PostMessageA(mp_StreamerWindow, WM_KEYUP, 'S', 0);
+//        SendMessageA(mp_StreamerWindow, WM_KEYDOWN, int('S'), 0);
+//        SendMessageA(mp_StreamerWindow, WM_KEYUP, int('S'), 0);
 
         ui->button_record->setText(tr("Stoppen"));
         ui->label_record->setEnabled(true);
@@ -362,7 +350,14 @@ void RecordWindow::startVideo()
     }
 
     if(!ms_videoFile.isEmpty())
+    {
         QDesktopServices::openUrl(QUrl(mo_savePath1.absoluteFilePath(ms_videoFile), QUrl::TolerantMode));
+    }
+    else
+    {
+        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                 tr("Wiedergabe konnte nicht gestartet werden!\nKein aufgenommenes Video gefunden!"));
+    }
 }
 
 void RecordWindow::stopVideo()
@@ -374,9 +369,12 @@ void RecordWindow::stopVideo()
         return;
     }
 
-    SetForegroundWindow(*mp_PlayerWindow);
-    keybd_event(VK_F4, 0, 0, 0);
-    keybd_event(VK_F4, 0, WM_KEYUP, 0);
+//    SetForegroundWindow(mp_PlayerWindow);
+//    keybd_event(VK_F4, 0, 0, 0);
+//    keybd_event(VK_F4, 0, WM_KEYUP, 0);
+
+    PostMessageA(mp_PlayerWindow, WM_KEYDOWN, VK_F4, 0);
+    PostMessageA(mp_PlayerWindow, WM_KEYUP, VK_F4, 0);
 }
 
 void RecordWindow::openVideo1(const QModelIndex &index)
@@ -394,20 +392,23 @@ void RecordWindow::openVideo2(const QModelIndex &index)
 void RecordWindow::renameVideo(int cam)
 {
     QString oldName;
+    QDir savePath;
 
     if(cam == 1)
     {
         QModelIndex indexSource = mp_proxymodel1->mapToSource(ui->treeView_folder->currentIndex());
+        savePath = mo_savePath1;
         oldName = mp_filemodel1->filePath(indexSource);
     }
     else if(cam == 2)
     {
         QModelIndex indexSource = mp_proxymodel2->mapToSource(ui->treeView_folder2->currentIndex());
+        savePath = mo_savePath2;
         oldName = mp_filemodel2->filePath(indexSource);
     }
 
     int index = oldName.lastIndexOf('.');
-    QStringRef videoFormat(&oldName, index, oldName.size()-index);
+    QStringRef videoFormat(&oldName, index, oldName.size() - index);
 
     bool ok;
     QString fightnr = MessagePrinter::InputHandler("Fight Nr: ", ui->lineEdit_fightNr->text(), ok);
@@ -422,12 +423,12 @@ void RecordWindow::renameVideo(int cam)
     // find the number of the files with the fight number
     QStringList nameFilter2;
     nameFilter2 << (fightnr + "*");
-    mo_savePath2.setNameFilters(nameFilter2);
+    savePath.setNameFilters(nameFilter2);
 
     // increment counter if a file with the name already exists
-    mi_ivrCounter = mo_savePath2.entryList().size() + 1;
+    mi_ivrCounter = savePath.entryList().size() + 1;
 
     ms_videoFile = (fightnr + "." + QString::number(mi_ivrCounter) + videoFormat.toString());
-    mo_savePath2.rename(oldName, ms_videoFile);
+    savePath.rename(oldName, ms_videoFile);
 }
 

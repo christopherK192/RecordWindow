@@ -156,8 +156,8 @@ private:
     QSortFilterProxyModel* mp_proxymodel2;
 
     //IVR variables
-    HWND*       mp_PlayerWindow;
-//    QString     ms_videoPlayer;
+    HWND        mp_PlayerWindow;
+    QString     ms_videoPlayer;
     QString     ms_videoFile;
     QStringList ml_videoContainer1;
     QStringList ml_videoContainer2;
@@ -167,8 +167,8 @@ private:
     int         mi_numCams;
 
     // streamer variables
-    HWND*   mp_StreamerWindow;
-//    QString ms_videoStreamer;
+    HWND    mp_StreamerWindow;
+    QString ms_videoStreamer;
     QString ms_hotkeyStart;
     QString ms_hotkeyStop;
     bool    mb_useStreamer;

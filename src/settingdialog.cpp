@@ -4,6 +4,7 @@
 
 #include <QTextStream>
 #include <QPushButton>
+#include <QDebug>
 
 SettingDialog::SettingDialog(QWidget *parent) :
     QDialog(parent),
@@ -113,34 +114,56 @@ void SettingDialog::loadSettings()
         QString line;
 
         saveStream.readLineInto(&line);
-        toggleCameras(line.split("::")[-1].toInt());
+        int num_cameras = line.split("::").last().toInt();
+        if(num_cameras == 1)
+        {
+           ui->radioButton_Kamera1->setChecked(true);
+        }
+        else if(num_cameras == 2)
+        {
+            ui->radioButton_Kamera2->setChecked(true);
+        }
+        toggleCameras(num_cameras);
 
         saveStream.readLineInto(&line);
-        ui->lineEdit_videoPath1->setText(line.split("::")[-1]);
+        ui->lineEdit_videoPath1->setText(line.split("::").last());
+        m_SettingsIVR.videoPath1 = ui->lineEdit_videoPath1->text();
 
         saveStream.readLineInto(&line);
-        ui->comboBox_videoContainer1->setCurrentIndex(line.split("::")[-1].toInt());
+        ui->comboBox_videoContainer1->setCurrentIndex(line.split("::").last().toInt());
+        m_SettingsIVR.videoContainer1 = extractFormat(ui->comboBox_videoContainer1->currentText());
 
         if(ui->groupBox_Kamera2->isEnabled())
         {
             saveStream.readLineInto(&line);
-            ui->lineEdit_videoPath2->setText(line.split("::")[-1]);
+            ui->lineEdit_videoPath2->setText(line.split("::").last());
+            m_SettingsIVR.videoPath2 = ui->lineEdit_videoPath2->text();
 
             saveStream.readLineInto(&line);
-            ui->comboBox_videoContainer2->setCurrentIndex(line.split("::")[-1].toInt());
+            ui->comboBox_videoContainer2->setCurrentIndex(line.split("::").last().toInt());
+            m_SettingsIVR.videoContainer2 = extractFormat(ui->comboBox_videoContainer2->currentText());
+        }
+        else
+        {
+            saveStream.readLineInto(&line);
+            saveStream.readLineInto(&line);
         }
 
         saveStream.readLineInto(&line);
-        enableStreamer(line.split("::")[-1].toInt());
+        ui->checkBox_videoStreamer->setChecked(line.split("::").last().toInt());
 
         saveStream.readLineInto(&line);
-        ui->lineEdit_hotkeyStart->setText(line.split("::")[-1]);
+        ui->lineEdit_hotkeyStart->setText(line.split("::").last());
+        m_SettingsIVR.hotkeyStart = ui->lineEdit_hotkeyStart->text();
 
         saveStream.readLineInto(&line);
-        ui->lineEdit_hotkeyStop->setText(line.split("::")[-1]);
+        ui->lineEdit_hotkeyStop->setText(line.split("::").last());
+        m_SettingsIVR.hotkeyStop = ui->lineEdit_hotkeyStop->text();
 
         saveFile.close();
         MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen wurden erfolgreich geladen."));
+
+        return;
     }
     MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen konnten nicht geladen werden."));
 }
@@ -164,6 +187,8 @@ void SettingDialog::saveSettings()
 
         saveFile.close();
         MessagePrinter::InfoBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen wurden erfolgreich gespeichert."));
+
+        return;
     }
     MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO, tr("Einstellungen konnten nicht gespeichert werden."));
 }
@@ -321,7 +346,7 @@ void SettingDialog::connect2Streamer()
     {
         MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
                                  tr("Es konnte keine Instanz des angegebenen Programms gefunden werden!\n\
-                                    Bitte überprüfen Sie, ob das Programm geöffnet ist!"));
+                                     Bitte überprüfen Sie, ob das Programm geöffnet ist!"));
         return;
     }
 

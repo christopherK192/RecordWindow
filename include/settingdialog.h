@@ -6,7 +6,7 @@
 #include <QAbstractButton>
 #include <Windows.h>
 
-#define SAVE_FILE "settings.sav"
+#define SAVE_FILE "/settings.sav"
 
 
 namespace Ui {
