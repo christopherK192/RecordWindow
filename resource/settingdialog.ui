@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>500</height>
+    <width>400</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -43,7 +43,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QFrame" name="frame_kameras">
+        <widget class="QFrame" name="frame_cameras">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -52,9 +52,9 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QRadioButton" name="radioButton_Kamera1">
+           <widget class="QRadioButton" name="radioButton_1camera">
             <property name="text">
-             <string>1 Kamera</string>
+             <string>1 Camera</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -78,9 +78,9 @@
            </spacer>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButton_Kamera2">
+           <widget class="QRadioButton" name="radioButton_2camera">
             <property name="text">
-             <string>2 Kameras</string>
+             <string>2 Cameras</string>
             </property>
            </widget>
           </item>
@@ -101,9 +101,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_Kamera1">
+        <widget class="QGroupBox" name="groupBox_camera1">
          <property name="title">
-          <string>Kamera 1:</string>
+          <string>Camera 1:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="1" column="1">
@@ -119,14 +119,14 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Video Directory:</string>
+             <string>Video directory:</string>
             </property>
            </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>Recording Videoformat:</string>
+             <string>Video format:</string>
             </property>
            </widget>
           </item>
@@ -137,22 +137,22 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_Kamera2">
+        <widget class="QGroupBox" name="groupBox_camera2">
          <property name="title">
-          <string>Kamera 2:</string>
+          <string>Camera 2:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="2" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
-             <string>Recording Videoformat:</string>
+             <string>Video format:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>Video Directory:</string>
+             <string>Video directory:</string>
             </property>
            </widget>
           </item>
@@ -166,41 +166,6 @@
            <widget class="QToolButton" name="button_videoPath2">
             <property name="text">
              <string>...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QFrame" name="frame">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Video Player:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QComboBox" name="comboBox_videoPlayer">
-            <item>
-             <property name="text">
-              <string>-</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QToolButton" name="button_videoPlayer">
-            <property name="text">
-             <string>Verbinden</string>
             </property>
            </widget>
           </item>
@@ -274,7 +239,7 @@
           <item row="1" column="1">
            <widget class="QToolButton" name="button_videoStreamer">
             <property name="text">
-             <string>Verbinden</string>
+             <string>Connect</string>
             </property>
            </widget>
           </item>
@@ -293,7 +258,7 @@
           <item row="1" column="1">
            <widget class="QToolButton" name="button_hotkeyStart">
             <property name="text">
-             <string>Aufnehmen</string>
+             <string>Record</string>
             </property>
            </widget>
           </item>
@@ -326,7 +291,7 @@
           <item row="1" column="1">
            <widget class="QToolButton" name="button_hotkeyStop">
             <property name="text">
-             <string>Aufnehmen</string>
+             <string>Record</string>
             </property>
            </widget>
           </item>
@@ -355,7 +320,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>123</height>
+           <height>0</height>
           </size>
          </property>
         </spacer>
@@ -366,6 +331,9 @@
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="locale">
+      <locale language="English" country="Germany"/>
+     </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Save</set>
      </property>
@@ -375,16 +343,14 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget_settings</tabstop>
-  <tabstop>radioButton_Kamera1</tabstop>
-  <tabstop>radioButton_Kamera2</tabstop>
+  <tabstop>radioButton_1camera</tabstop>
+  <tabstop>radioButton_2camera</tabstop>
   <tabstop>lineEdit_videoPath1</tabstop>
   <tabstop>button_videoPath1</tabstop>
   <tabstop>comboBox_videoContainer1</tabstop>
   <tabstop>lineEdit_videoPath2</tabstop>
   <tabstop>button_videoPath2</tabstop>
   <tabstop>comboBox_videoContainer2</tabstop>
-  <tabstop>comboBox_videoPlayer</tabstop>
-  <tabstop>button_videoPlayer</tabstop>
   <tabstop>checkBox_videoStreamer</tabstop>
   <tabstop>comboBox_videoStreamer</tabstop>
   <tabstop>button_videoStreamer</tabstop>

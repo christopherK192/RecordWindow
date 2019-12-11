@@ -21,10 +21,13 @@ public:
     /*!
      * SettingDialog::SettingDialog
      * Constructor of the SettingDialog class
-     * The constructor initializes the ui, connects the button signals and loads the settings.
-     * Additionally it iterates over all open windows and gets the list of all open window names.
+     * The constructor initializes the ui, connects the button signals and loads
+     * the settings.
+     * Additionally it iterates over all open windows and gets the list of all
+     * open window names.
      *
-     * \param parent Parent window of the SettingDialog class (inherits form QDialog).
+     * \param parent Parent window of the SettingDialog class (inherits from
+     *               QDialog).
      */
     explicit SettingDialog(QWidget *parent = nullptr);
     /*!
@@ -33,47 +36,48 @@ public:
      */
     ~SettingDialog();
 
-    enum Hotkeys{RECORDING_START = 0,
-                 RECORDING_STOP
-                };
+    enum Hotkeys
+    {
+        RECORDING_START = 0,
+        RECORDING_STOP
+    };
 
-    const QStringList VIDEO_CONTAINERS = {"Advanced Streaming Format (*.asf, *.wmv, *.wma)",
-                                          "Audio Video Interleave (*.avi)",
-                                          "BDAV MPEG-2 Transport Stream (*.m2ts, *.mts)",
-                                          "Digital Video (*.dv)",
-                                          "DivX Media Format (*.divx)",
-                                          "Enhanced VOB (*.evo)",
-                                          "Flash Video (*.flv)",
-                                          "Material Exchange Format (*.mxf)",
-                                          "Matroska (*.mkv, *.mka)",
-                                          "MPEG-2-Program Stream (*.mpg, *.mpeg, *.ps)",
-                                          "MPEG-2 Transport Stream (*.ts, *.tsp)",
-                                          "MP4 (*.mp4)",
-                                          "Ogg Media (*.ogg, *.ogv, *.ogm)",
-                                          "OMFI (*.omf)",
-                                          "QuickTime (*.mov, *.qt)",
-                                          "RealMedia (*.rm, *.rmvb, *.ra, *.ram)",
-                                          "Video Object (*.vob)",
-                                          "WebM (*.webm)"
-                                         };
+    const QStringList VIDEO_CONTAINERS = {
+        "Advanced Streaming Format (*.asf, *.wmv, *.wma)",
+        "Audio Video Interleave (*.avi)",
+        "BDAV MPEG-2 Transport Stream (*.m2ts, *.mts)",
+        "Digital Video (*.dv)",
+        "DivX Media Format (*.divx)",
+        "Enhanced VOB (*.evo)",
+        "Flash Video (*.flv)",
+        "Material Exchange Format (*.mxf)",
+        "Matroska (*.mkv, *.mka)",
+        "MPEG-2-Program Stream (*.mpg, *.mpeg, *.ps)",
+        "MPEG-2 Transport Stream (*.ts, *.tsp)",
+        "MP4 (*.mp4)",
+        "Ogg Media (*.ogg, *.ogv, *.ogm)",
+        "OMFI (*.omf)",
+        "QuickTime (*.mov, *.qt)",
+        "RealMedia (*.rm, *.rmvb, *.ra, *.ram)",
+        "Video Object (*.vob)",
+        "WebM (*.webm)"
+    };
 
     struct IVR_Settings
     {
         // IVR variables
-        HWND*       videoPlayer;
         QStringList videoContainer1;
         QStringList videoContainer2;
-        QString     videoPlayerName;
         QString     videoPath1;
         QString     videoPath2;
         int         numberCams;
 
         // Recording variables
-        HWND*   videoStreamer;
+        HWND    videoStreamer;
         QString videoStreamerName;
-        QString hotkeyStart;
-        QString hotkeyStop;
-        bool    useStreamer;
+        char    hotkeyStart;
+        char    hotkeyStop;
+        int     useStreamer;
     };
 
 private:
@@ -82,89 +86,80 @@ private:
      * Callback function for each open window.
      * Extracts the window name of each window and stores them in a list.
      *
-     * \param window [in]  Window Handle of the current Window.
-     * \param param  [out] In this case it's the list of all window names.
+     * \param i_window [in]  Window Handle of the current Window.
+     * \param o_param  [out] In this case it's the list of all window names.
      *
      * \return Returns true if successful.
      */
-    static BOOL CALLBACK getOpenWindows(HWND window, LPARAM param);
+    static BOOL CALLBACK getOpenWindows(HWND i_window, LPARAM o_param);
     /*!
      * SettingDialog::extractFormat
      * Extracts the video format from the combobox item.
      *
-     * \param videoContainer [in] combobox item.
+     * \param i_sVideoContainer [in] combobox item.
      *
      * \return Returns list of video formats.
      */
-    QStringList extractFormat(QString videoContainer);
-    /*!
-     * SettingDialog::recordHotkey
-     * Transforms keyinputs into a hotkey sequenz.
-     *
-     * \param hotkey [in] line edit of the hotkey to be recorded.
-     */
-    bool recordHotkey(QLineEdit* hotkey);
+    QStringList extractFormat(QString i_sVideoContainer);
 
 private slots:
     /*!
      * SettingDialog::loadSettings
      * Reads the saved settings when constructed.
      *
-     * Settings: Windowname of the last selected video streamer and video player as well as the savepaths, videocontainers and hotkeys.
+     * Settings: Windowname of the last selected video streamer and video player
+     * as well as the savepaths, videocontainers and hotkeys.
      */
     void loadSettings();
     /*!
      * SettingDialog::writeSettings
      * Saves the current settings when closed.
      *
-     * Settings: Windowname of the last selected video streamer and video player as well as the savepaths, videocontainers and hotkeys.
+     * Settings: Windowname of the last selected video streamer and video player
+     * as well as the savepaths, videocontainers and hotkeys.
      */
     void saveSettings();
     /*!
      * SettingDialog::closeSettings
      * Writes settings or emits accepted or rejected.
      *
-     * \param button [in] pointer of the pressed button.
+     * \param i_pButton [in] pointer of the pressed button.
      */
-    void closeSettings(QAbstractButton* button);
+    void closeSettings(QAbstractButton* i_pButton);
 
     // IVR Functions
     /*!
      * SettingDialog::toggleCameras
      * Toggles number of cameras.
      *
-     * \param camera [in] number of cameras to be used.
+     * \param i_nCamera [in] number of cameras to be used.
      */
-    void toggleCameras(const int camera);
+    void toggleCameras(const int i_nCamera);
     /*!
      * SettingDialog::setVideoPath
      * Gets and sets the savepath over the File Dialog.
      * Called by [...]-button.
      *
-     * \param camera [in] Sets the path for camera number camera.
+     * \param i_nCamera [in] Sets the path for camera number camera.
      */
-    void setVideoPath(const int camera);
+    void setVideoPath(const int i_nCamera);
     /*!
      * SettingDialog::setVideoContainer
      * Sets the videoContainer by change of comboBox item;
      *
-     * \param camera [in] gets video container for camera number camera.
+     * \param i_nCamera [in] gets video container for camera number camera.
      */
-    void setVideoContainer(const int camera);
-    /*!
-     * SettingDialog::connect2Player
-     * Extract the window handle for the video player.
-     */
-    void connect2Player();
+    void setVideoContainer(const int i_nCamera);
 
     // Recording Functions
     /*!
      * SettingDialog::toggleStreamer
-     * Toggles state of the checkbox and enables or disables videostreamer options.
+     * Toggles state of the checkbox and enables or disables videostreamer
+     * options.
      *
-     * \param state [in] State of the checkbox (Checked, Unchecked).
+     * \param i_nState [in] State of the checkbox (Checked, Unchecked).
      */
-    void enableStreamer(const int state);
+    void enableStreamer(const int i_nState);
     /*!
      * SettingDialog::connect2Streamer
      * Extract the window handle for the video streamer.
@@ -174,19 +169,22 @@ private slots:
      * SettingDialog::setHotkey
      * Records a hotkey.
      *
-     * \param hotkey [in] Hotkey to be recorded.
+     * \param i_nHotkey [in] Hotkey to be recorded.
      */
-    void setHotkey(const int hotkey);
+    void setHotkey(const int i_nHotkey);
 
 private:   
-    QString WINDOW_TITLE = "IVR-Record App";
-    QString ICON_LOGO    = ":/icons/icons/logo.ico";
+    const QString WINDOW_TITLE = "TUT-IVR App";
+    const QString ICON_LOGO    = ":/icons/icons/logo.ico";
 
     Ui::SettingDialog *ui;
-    IVR_Settings m_SettingsIVR;
+    IVR_Settings      m_oSettingsIVR;
 
 public:
-    inline const IVR_Settings Settings(){return m_SettingsIVR;}
+    inline const IVR_Settings Settings()
+    {
+        return m_oSettingsIVR;
+    }
 };
 
 #endif // SETTINGDIALOG_H

@@ -8,7 +8,6 @@
         <file>icons/exitProgram.svg</file>
         <file>icons/german.svg</file>
         <file>icons/english.svg</file>
-        <file>icons/checkNO.svg</file>
-        <file>icons/checkOK.svg</file>
+        <file>icons/record2.svg</file>
     </qresource>
 </RCC>

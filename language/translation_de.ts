@@ -2,6 +2,36 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de_DE">
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="../include/messageprinter.h" line="28"/>
+        <source>FEHLER:
+</source>
+        <translation>FEHLER:</translation>
+    </message>
+    <message>
+        <location filename="../include/messageprinter.h" line="50"/>
+        <source>Ja</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <location filename="../include/messageprinter.h" line="52"/>
+        <source>Nein</source>
+        <translation>Nein</translation>
+    </message>
+    <message>
+        <location filename="../include/messageprinter.h" line="53"/>
+        <source>WARNUNG:
+</source>
+        <translation>WARNUNG:</translation>
+    </message>
+    <message>
+        <location filename="../include/messageprinter.h" line="102"/>
+        <source>Abbrechen</source>
+        <translation>Abbrechen</translation>
+    </message>
+</context>
+<context>
     <name>RecordWindow</name>
     <message>
         <location filename="../resource/recordwindow.ui" line="25"/>
@@ -62,7 +92,7 @@
     <message>
         <location filename="../resource/recordwindow.ui" line="343"/>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenster</translation>
     </message>
     <message>
         <location filename="../resource/recordwindow.ui" line="364"/>
@@ -72,39 +102,29 @@
     <message>
         <location filename="../resource/recordwindow.ui" line="378"/>
         <location filename="../resource/recordwindow.ui" line="381"/>
-        <location filename="../src/recordwindow.cpp" line="347"/>
+        <location filename="../src/recordwindow.cpp" line="217"/>
         <source>Einstellungen</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../resource/recordwindow.ui" line="416"/>
-        <source>Freeze</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../resource/recordwindow.ui" line="419"/>
-        <source>Ctrl+F</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../resource/recordwindow.ui" line="427"/>
-        <source>Set Transparent</source>
-        <translation type="unfinished"></translation>
+        <source>Freeze</source>
+        <translation>Einfrieren</translation>
     </message>
     <message>
         <location filename="../resource/recordwindow.ui" line="430"/>
-        <source>Ctrl+R</source>
-        <translation type="unfinished"></translation>
+        <source>Ctrl+F</source>
+        <translation>Strg+F</translation>
     </message>
     <message>
-        <location filename="../resource/recordwindow.ui" line="438"/>
+        <location filename="../resource/recordwindow.ui" line="416"/>
         <source>Set Toplevel</source>
-        <translation type="unfinished"></translation>
+        <translation>In Vordergrund setzen</translation>
     </message>
     <message>
-        <location filename="../resource/recordwindow.ui" line="441"/>
+        <location filename="../resource/recordwindow.ui" line="419"/>
         <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Strg+T</translation>
     </message>
     <message>
         <source>Ctrl+I</source>
@@ -123,7 +143,7 @@
     <message>
         <location filename="../resource/recordwindow.ui" line="396"/>
         <source>Ctrl+B</source>
-        <translation type="unfinished"></translation>
+        <translation>Strg+B</translation>
     </message>
     <message>
         <location filename="../resource/recordwindow.ui" line="408"/>
@@ -131,68 +151,108 @@
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="48"/>
+        <location filename="../src/recordwindow.cpp" line="40"/>
         <source>Start</source>
         <translation>Aufnahme Starten</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="183"/>
         <source>Abbrechen</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="245"/>
-        <location filename="../src/recordwindow.cpp" line="283"/>
         <source>FEHLER:
 Keine abspielbare Datei gefunden!
 Bitte kontrollieren Sie den Pfad!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Keine abspielbare Datei gefunden!
 Bitte kontrollieren Sie den Pfad!</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="424"/>
         <source>FEHLER:
 Aufnahme konnte nicht gestoppt werden!
 Bitte kontrollieren Sie die Einstellungen!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Aufnahme konnte nicht gestoppt werden!
 Bitte kontrollieren Sie die Einstellungen!</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="426"/>
         <source>FEHLER:
 Aufnahme konnte nicht gestartet werden!
 Bitte kontrollieren Sie die Einstellungen!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Aufnahme konnte nicht gestartet werden!
 Bitte kontrollieren Sie die Einstellungen!</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="437"/>
+        <location filename="../src/recordwindow.cpp" line="131"/>
+        <source>Keine abspielbare Datei gefunden!
+Bitte kontrollieren Sie den Pfad!</source>
+        <translation>Keine abspielbare Datei gefunden!
+Bitte kontrollieren Sie den Pfad!</translation>
+    </message>
+    <message>
+        <location filename="../src/recordwindow.cpp" line="225"/>
+        <source>Einstellungen konnten nicht geladen werden!</source>
+        <translation>Einstellungen konnten nicht geladen werden!</translation>
+    </message>
+    <message>
+        <location filename="../src/recordwindow.cpp" line="304"/>
+        <source>Aufnahme konnte nicht gestoppt werden!
+Bitte kontrollieren Sie die Einstellungen!</source>
+        <translation>Aufnahme konnte nicht gestoppt werden!
+Bitte kontrollieren Sie die Einstellungen!</translation>
+    </message>
+    <message>
+        <location filename="../src/recordwindow.cpp" line="309"/>
+        <source>Aufnahme konnte nicht gestartet werden!
+Bitte kontrollieren Sie die Einstellungen!</source>
+        <translation>Aufnahme konnte nicht gestartet werden!
+Bitte kontrollieren Sie die Einstellungen!</translation>
+    </message>
+    <message>
+        <location filename="../src/recordwindow.cpp" line="326"/>
         <source>Starten</source>
         <translation>Aufnahme Starten</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="450"/>
+        <location filename="../src/recordwindow.cpp" line="344"/>
         <source>Stoppen</source>
         <translation>Aufnahme Stoppen</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="468"/>
+        <location filename="../src/recordwindow.cpp" line="356"/>
+        <source>Wiedergabe konnte nicht gestartet werden!
+Bitte kontrollieren Sie die Einstellungen und starten Sie die Wiedergabe manuell!</source>
+        <translation>Wiedergabe konnte nicht gestartet werden!
+Bitte kontrollieren Sie die Einstellungen und starten Sie die Wiedergabe manuell!</translation>
+    </message>
+    <message>
+        <location filename="../src/recordwindow.cpp" line="367"/>
+        <source>Wiedergabe konnte nicht gestartet werden!
+Kein aufgenommenes Video gefunden!</source>
+        <translation>Wiedergabe konnte nicht gestartet werden!
+Kein aufgenommenes Video gefunden!</translation>
+    </message>
+    <message>
+        <location filename="../src/recordwindow.cpp" line="379"/>
+        <source>Wiedergabe konnte nicht gestoppt werden!
+Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell!</source>
+        <translation>Wiedergabe konnte nicht gestoppt werden!
+Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell!</translation>
+    </message>
+    <message>
         <source>FEHLER:
 Wiedergabe konnte nicht gestartet werden!
 Bitte kontrollieren Sie die Einstellungen und starten Sie die Wiedergabe manuell!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Wiedergabe konnte nicht gestartet werden!
 Bitte kontrollieren Sie die Einstellungen und starten Sie die Wiedergabe manuell!</translation>
     </message>
     <message>
-        <location filename="../src/recordwindow.cpp" line="488"/>
         <source>FEHLER:
 Wiedergabe konnte nicht gestoppt werden!
 Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Wiedergabe konnte nicht gestoppt werden!
 Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell!</translation>
     </message>
@@ -218,12 +278,12 @@ Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell
     <message>
         <location filename="../resource/settingdialog.ui" line="106"/>
         <source>Kamera 1:</source>
-        <translation type="unfinished">Kamera 1:</translation>
+        <translation>Kamera 1:</translation>
     </message>
     <message>
         <location filename="../resource/settingdialog.ui" line="142"/>
         <source>Kamera 2:</source>
-        <translation type="unfinished">Kamera 2:</translation>
+        <translation>Kamera 2:</translation>
     </message>
     <message>
         <location filename="../resource/settingdialog.ui" line="203"/>
@@ -234,7 +294,7 @@ Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell
     <message>
         <location filename="../resource/settingdialog.ui" line="242"/>
         <source>Use Video Streamer/Recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>Video Streamer/Recorder verwenden</translation>
     </message>
     <message>
         <location filename="../resource/settingdialog.ui" line="261"/>
@@ -245,17 +305,17 @@ Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell
         <location filename="../resource/settingdialog.ui" line="296"/>
         <location filename="../resource/settingdialog.ui" line="329"/>
         <source>Aufnehmen</source>
-        <translation type="unfinished"></translation>
+        <translation>Aufnehmen</translation>
     </message>
     <message>
         <location filename="../resource/settingdialog.ui" line="310"/>
         <source>Hotkey Start Recording:</source>
-        <translation type="unfinished"></translation>
+        <translation>Hotkey Aufnahme Straten:</translation>
     </message>
     <message>
         <location filename="../resource/settingdialog.ui" line="343"/>
         <source>Hotkey Stop Recording:</source>
-        <translation type="unfinished"></translation>
+        <translation>Hotkey Aufnahme Stoppen:</translation>
     </message>
     <message>
         <source>Video Directory 2:</source>
@@ -312,28 +372,93 @@ Bitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/settingdialog.cpp" line="353"/>
-        <location filename="../src/settingdialog.cpp" line="390"/>
         <source>FEHLER:
 Es konnte keine Instanz des angegebenen Programms gefunden werden!
 Bitte überprüfen Sie, ob das Programm geöffnet ist!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Es konnte keine Instanz des angegebenen Programms gefunden werden!
 Bitte überprüfen Sie, ob das Programm geöffnet ist!</translation>
     </message>
     <message>
-        <location filename="../src/settingdialog.cpp" line="359"/>
-        <location filename="../src/settingdialog.cpp" line="396"/>
+        <location filename="../src/settingdialog.cpp" line="168"/>
+        <source>Einstellungen wurden erfolgreich geladen.</source>
+        <translation>Einstellungen wurden erfolgreich geladen.</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="172"/>
+        <source>Einstellungen konnten nicht geladen werden.</source>
+        <translation>Einstellungen konnten nicht geladen werden!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="197"/>
+        <source>Einstellungen konnten nicht gespeichert werden.</source>
+        <translation>Einstellungen konnten nicht gespeichert werden!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="216"/>
+        <source>Unerwarteter Knopf gedrückt!</source>
+        <translation>Unerwarteter Knopf gedrückt!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="249"/>
+        <source>Unerwartete Pfadfehler!</source>
+        <translation>Unerwarteter Pfadfehler!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="260"/>
+        <source>Es wurde kein Ordner ausgewählt!
+Bitte wählen Sie einen Ordner aus!</source>
+        <translation>Es wurde kein Ordner ausgewählt!
+Bitte wählen Sie einen Ordner aus!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="289"/>
+        <location filename="../src/settingdialog.cpp" line="342"/>
+        <source>Es wurde kein Programm ausgewählt!
+Bitte wählen Sie ein Programm aus!</source>
+        <translation>Es wurde kein Programm ausgewählt!
+Bitte wählen Sie ein Programm aus!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="299"/>
+        <source>Es konnte keine Instanz des angegebenen Programms gefunden werden!
+                                    Bitte überprüfen Sie, ob das Programm geöffnet ist!</source>
+        <translation>Es konnte keine Instanz des angegebenen Programms gefunden werden!
+Bitte überprüfen Sie, ob das Programm geöffnet ist!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="307"/>
+        <location filename="../src/settingdialog.cpp" line="360"/>
         <source>Verbindung mit dem Programm wurde erfolgreich hergestellt.</source>
         <translation>Verbindung mit dem Programm wurde erfolgreich hergestellt.</translation>
     </message>
     <message>
-        <location filename="../src/settingdialog.cpp" line="367"/>
-        <location filename="../src/settingdialog.cpp" line="404"/>
+        <location filename="../src/settingdialog.cpp" line="352"/>
+        <source>Es konnte keine Instanz des angegebenen Programms gefunden werden!
+                                     Bitte überprüfen Sie, ob das Programm geöffnet ist!</source>
+        <translation>Es konnte keine Instanz des angegebenen Programms gefunden werden!
+Bitte überprüfen Sie, ob das Programm geöffnet ist!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="381"/>
+        <source>Please enter shortcut</source>
+        <translation>Bitte Hotkey eingeben:</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="385"/>
+        <source>Shotcut konnte nicht gesetzt werden! Bitte nochmal versuchen!</source>
+        <translation>Hotkey konnte nicht gesetzt werden! Bitte versuchen Sie es noch einmal!</translation>
+    </message>
+    <message>
+        <location filename="../src/settingdialog.cpp" line="391"/>
+        <source>Shotcut wurde erfolgreich gesetzt.</source>
+        <translation>Hotkey wurde erfolgreich gesetzt.</translation>
+    </message>
+    <message>
         <source>FEHLER:
 Es wurde kein Programm ausgewählt!
 Bitte wählen Sie ein Programm aus!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Es wurde kein Programm ausgewählt!
 Bitte wählen Sie ein Programm aus!</translation>
     </message>
@@ -346,23 +471,20 @@ Es wurde kein Programm ausgewählt!
 Bitte wählen Sie ein Programm aus!</translation>
     </message>
     <message>
-        <location filename="../src/settingdialog.cpp" line="419"/>
-        <location filename="../src/settingdialog.cpp" line="435"/>
+        <location filename="../src/settingdialog.cpp" line="253"/>
         <source>Ordner Öffnen</source>
         <translation>Ordner Öffnen</translation>
     </message>
     <message>
-        <location filename="../src/settingdialog.cpp" line="424"/>
-        <location filename="../src/settingdialog.cpp" line="440"/>
         <source>FEHLER:
 Es wurde kein Ordner ausgewählt!
 Bitte wählen Sie einen Ordner aus!</source>
-        <translation>FEHLER:
+        <translation type="vanished">FEHLER:
 Es wurde kein Ordner ausgewählt!
 Bitte wählen Sie einen Ordner aus!</translation>
     </message>
     <message>
-        <location filename="../src/settingdialog.cpp" line="513"/>
+        <location filename="../src/settingdialog.cpp" line="193"/>
         <source>Einstellungen wurden erfolgreich gespeichert.</source>
         <translation>Einstellungen wurden erfolgreich gespeichert.</translation>
     </message>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>321</width>
-    <height>700</height>
+    <width>400</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,251 +22,70 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>IVR-Record App</string>
+   <string>TUT-IVR App</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../icons.qrc">
     <normaloff>:/icons/icons/logo.ico</normaloff>:/icons/icons/logo.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <widget class="QFrame" name="frame_3">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Fight Nr.:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>10</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_fightNr"/>
-       </item>
-      </layout>
-     </widget>
+     <widget class="QLineEdit" name="lineEdit_fightNr"/>
     </item>
     <item>
-     <widget class="QFrame" name="frame_recording">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
+     <widget class="QPushButton" name="pushButton_record">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>50</height>
+       </size>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_record">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../icons.qrc">:/icons/icons/record.svg</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>10</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="button_record">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Start Recording</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>50</width>
-           <height>40</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QFrame" name="frame_replay">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>50</height>
+       </size>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QPushButton" name="button_playVideo">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string> Start IVR</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../icons.qrc">
-           <normaloff>:/icons/icons/playVideo.svg</normaloff>:/icons/icons/playVideo.svg</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="button_stopVideo">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string> Stop IVR</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../icons.qrc">
-           <normaloff>:/icons/icons/stopVideo.svg</normaloff>:/icons/icons/stopVideo.svg</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="font">
-          <font>
-           <pointsize>9</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please press &lt;span style=&quot; font-weight:600;&quot;&gt;F4&lt;/span&gt; or &lt;span style=&quot; font-weight:600;&quot;&gt;Stop IVR,&lt;/span&gt; in order to stop the IVR.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="../icons.qrc">
+        <normaloff>:/icons/icons/record2.svg</normaloff>:/icons/icons/record2.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>40</width>
+        <height>40</height>
+       </size>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="cam1">
+      <widget class="QWidget" name="camera1">
        <attribute name="title">
-        <string>Kamera 1</string>
+        <string>Camera 1</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QPushButton" name="pushButton_rename1">
           <property name="text">
@@ -282,15 +101,18 @@
           <property name="sortingEnabled">
            <bool>true</bool>
           </property>
+          <property name="headerHidden">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="cam2">
+      <widget class="QWidget" name="camera2">
        <attribute name="title">
-        <string>Kamera 2</string>
+        <string>Camera 2</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QPushButton" name="pushButton_rename2">
           <property name="text">
@@ -302,6 +124,9 @@
          <widget class="QTreeView" name="treeView_folder2">
           <property name="dragDropMode">
            <enum>QAbstractItemView::DragOnly</enum>
+          </property>
+          <property name="itemsExpandable">
+           <bool>true</bool>
           </property>
           <property name="sortingEnabled">
            <bool>true</bool>
@@ -319,93 +144,61 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>321</width>
-     <height>26</height>
+     <width>400</width>
+     <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuDatei">
+   <widget class="QMenu" name="menuSettings">
     <property name="title">
-     <string>Programm</string>
+     <string/>
     </property>
-    <addaction name="actionEinstellungen"/>
+    <property name="icon">
+     <iconset resource="../icons.qrc">
+      <normaloff>:/icons/icons/options.svg</normaloff>:/icons/icons/options.svg</iconset>
+    </property>
+    <addaction name="actionSettings"/>
     <addaction name="separator"/>
-    <addaction name="actionBeenden"/>
-   </widget>
-   <widget class="QMenu" name="menuSprache">
-    <property name="title">
-     <string>Sprache</string>
-    </property>
-    <addaction name="actionDeutsch"/>
-    <addaction name="actionEnglish"/>
-   </widget>
-   <widget class="QMenu" name="menuWindow">
-    <property name="title">
-     <string>Window</string>
-    </property>
-    <addaction name="actionFreeze"/>
     <addaction name="actionSet_Toplevel"/>
+    <addaction name="actionFreeze"/>
+    <addaction name="actionShowFolder"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
-   <addaction name="menuDatei"/>
-   <addaction name="menuWindow"/>
-   <addaction name="menuSprache"/>
+   <addaction name="menuSettings"/>
   </widget>
-  <action name="actionDeutsch">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../icons.qrc">
-     <normaloff>:/icons/icons/german.svg</normaloff>:/icons/icons/german.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Deutsch</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-  </action>
-  <action name="actionEinstellungen">
+  <action name="actionSettings">
    <property name="icon">
     <iconset resource="../icons.qrc">
      <normaloff>:/icons/icons/options.svg</normaloff>:/icons/icons/options.svg</iconset>
    </property>
    <property name="text">
-    <string>Einstellungen</string>
-   </property>
-   <property name="toolTip">
-    <string>Einstellungen</string>
+    <string>Settings</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+E</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionBeenden">
+  <action name="actionExit">
    <property name="icon">
     <iconset resource="../icons.qrc">
      <normaloff>:/icons/icons/exitProgram.svg</normaloff>:/icons/icons/exitProgram.svg</iconset>
    </property>
    <property name="text">
-    <string>Beenden</string>
+    <string>Exit</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+B</string>
+    <string>Ctrl+E</string>
    </property>
   </action>
-  <action name="actionEnglish">
+  <action name="actionSet_Toplevel">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset resource="../icons.qrc">
-     <normaloff>:/icons/icons/english.svg</normaloff>:/icons/icons/english.svg</iconset>
-   </property>
    <property name="text">
-    <string>English</string>
+    <string>Set Toplevel</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionFreeze">
@@ -419,26 +212,15 @@
     <string>Ctrl+F</string>
    </property>
   </action>
-  <action name="actionTransparent">
+  <action name="actionShowFolder">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Set Transparent</string>
+    <string>Show Folder</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+R</string>
-   </property>
-  </action>
-  <action name="actionSet_Toplevel">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Set Toplevel</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+T</string>
+    <string>Ctrl+D</string>
    </property>
   </action>
  </widget>

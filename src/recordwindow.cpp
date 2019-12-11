@@ -5,31 +5,28 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QDesktopServices>
-//#include <QDateTime>
-//#include <QTreeView>
+#include <QScreen>
 
 RecordWindow::RecordWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::RecordWindow),  
-    mp_filemodel1(new QFileSystemModel),
-    mp_filemodel2(new QFileSystemModel),
-    mp_proxymodel1(new QSortFilterProxyModel),
-    mp_proxymodel2(new QSortFilterProxyModel),
-    mp_PlayerWindow(nullptr),
-//    ms_videoPlayer(""),
-    ml_videoContainer1(""),
-    ml_videoContainer2(""),
-    mo_savePath1(""),
-    mo_savePath2(""),
-    mi_ivrCounter(1),
-    mi_numCams(false),
-    mp_StreamerWindow(nullptr),
-//    ms_videoStreamer(""),
-    ms_hotkeyStart(""),
-    ms_hotkeyStop(""),
-    mb_useStreamer(false),
-    mb_recording(false),
-    m_dirLanguage(QApplication::applicationDirPath().append("/language"))
+    m_pFilemodel1(new QFileSystemModel),
+    m_pFilemodel2(new QFileSystemModel),
+    m_pProxymodel1(new QSortFilterProxyModel),
+    m_pProxymodel2(new QSortFilterProxyModel),
+    m_pPlayerWindow(nullptr),
+    m_slVideoContainer1(""),
+    m_slVideoContainer2(""),
+    m_oSavePath1(""),
+    m_oSavePath2(""),
+    m_nIvrCounter(1),
+    m_nNumCams(false),
+    m_pStreamerWindow(nullptr),
+    m_cHotkeyStart(NULL),
+    m_cHotkeyStop(NULL),
+    m_nUseStreamer(Qt::Unchecked),
+    m_bRecording(false),
+    m_bShowFolder(true)
 {
     // initialize ui
     ui->setupUi(this);
@@ -37,95 +34,90 @@ RecordWindow::RecordWindow(QWidget *parent) :
     ui->lineEdit_fightNr->clear();
     ui->lineEdit_fightNr->setText("100");
 
-    ui->button_record->setText(tr("Start"));
-    ui->frame_recording->setEnabled(mb_recording);
-
-    ui->tabWidget->setTabEnabled(1, mi_numCams == 2);
+    ui->tabWidget->setTabEnabled(1, m_nNumCams == 2);
+    showHideFolder();
 
     // initialize displayed folder
-    mp_filemodel1->setRootPath(QDir::currentPath());
-    mp_filemodel1->setFilter(QDir::Files | QDir::NoSymLinks);
-    mp_filemodel1->setNameFilterDisables(false);  
+    m_pFilemodel1->setRootPath(QDir::currentPath());
+    m_pFilemodel1->setFilter(QDir::Files | QDir::NoSymLinks);
+    m_pFilemodel1->setNameFilterDisables(false);
     // using proxymodel in order to sort items
-    mp_proxymodel1->setSourceModel(mp_filemodel1);
-    ui->treeView_folder->setModel(mp_proxymodel1);
+    m_pProxymodel1->setSourceModel(m_pFilemodel1);
+    ui->treeView_folder->setModel(m_pProxymodel1);
     ui->treeView_folder->setSortingEnabled(true);  
     // hide all columns except name and last changed
     ui->treeView_folder->setColumnHidden(1,true);
     ui->treeView_folder->setColumnHidden(2,true);
+    ui->treeView_folder->setColumnHidden(3,true);
 
     // initialize scond displayed folder (hidden)
-    mp_filemodel2->setRootPath(QDir::currentPath());
-    mp_filemodel2->setFilter(QDir::Files | QDir::NoSymLinks);
-    mp_filemodel2->setNameFilterDisables(false);
+    m_pFilemodel2->setRootPath(QDir::currentPath());
+    m_pFilemodel2->setFilter(QDir::Files | QDir::NoSymLinks);
+    m_pFilemodel2->setNameFilterDisables(false);
     // using proxymodel in order to sort items
-    mp_proxymodel2->setSourceModel(mp_filemodel2);
-    ui->treeView_folder2->setModel(mp_proxymodel2);
+    m_pProxymodel2->setSourceModel(m_pFilemodel2);
+    ui->treeView_folder2->setModel(m_pProxymodel2);
     ui->treeView_folder2->setSortingEnabled(true);
     // hide all columns except name and last changed
     ui->treeView_folder2->setColumnHidden(1,true);
     ui->treeView_folder2->setColumnHidden(2,true);
+    ui->treeView_folder2->setColumnHidden(3,true);
 
     // connect signals to buttons
-    connect(ui->button_record, &QPushButton::clicked, this, &RecordWindow::startstopRecord);
-    connect(ui->button_playVideo, &QPushButton::clicked, this, &RecordWindow::startVideo);
-    connect(ui->button_stopVideo, &QPushButton::clicked, this, &RecordWindow::stopVideo);
+    connect(ui->pushButton_record, &QPushButton::clicked,
+            this, &RecordWindow::startstopRecord);
 
-    connect(ui->pushButton_rename1, &QPushButton::clicked, [this](){RecordWindow::renameVideo(1);});
-    connect(ui->pushButton_rename2, &QPushButton::clicked, [this](){RecordWindow::renameVideo(2);});
-    connect(ui->treeView_folder, &QTreeView::doubleClicked, this, &RecordWindow::openVideo1);
-    connect(ui->treeView_folder2, &QTreeView::doubleClicked, this, &RecordWindow::openVideo2);
+    connect(ui->pushButton_rename1, &QPushButton::clicked,
+            [this](){RecordWindow::renameVideo(1);});
+    connect(ui->pushButton_rename2, &QPushButton::clicked,
+            [this](){RecordWindow::renameVideo(2);});
+    connect(ui->treeView_folder, &QTreeView::doubleClicked,
+            this, &RecordWindow::openVideo1);
+    connect(ui->treeView_folder2, &QTreeView::doubleClicked,
+            this, &RecordWindow::openVideo2);
 
-    connect(ui->actionEinstellungen, &QAction::triggered, this, &RecordWindow::openSettings);
-    connect(ui->actionFreeze, &QAction::toggled, this, &RecordWindow::freezeWindow);
-    connect(ui->actionSet_Toplevel, &QAction::toggled, this, &RecordWindow::setTopevel);
-    connect(ui->actionBeenden, &QAction::triggered, this, &RecordWindow::close);
+    connect(ui->actionSettings, &QAction::triggered,
+            this, &RecordWindow::openSettings);
+    connect(ui->actionFreeze, &QAction::toggled,
+            this, &RecordWindow::freezeWindow);
+    connect(ui->actionSet_Toplevel, &QAction::toggled,
+            this, &RecordWindow::setTopevel);
+    connect(ui->actionShowFolder, &QAction::triggered,
+            this, &RecordWindow::showHideFolder);
+    connect(ui->actionExit, &QAction::triggered,
+            this, &RecordWindow::close);
 
-    // setup language creating an actiongroup
-    QActionGroup* langGroup = new QActionGroup(ui->menuSprache);
-    langGroup->setExclusive(true);
+    this->resize(this->minimumWidth(), this->minimumHeight());
 
-    ui->actionDeutsch->setData("de");
-    langGroup->addAction(ui->actionDeutsch);
-    ui->actionEnglish->setData("en");
-    langGroup->addAction(ui->actionEnglish);
+    QRect screenrect = qApp->primaryScreen()->geometry();
+    this->move(screenrect.right() - 78, screenrect.top());
 
-    connect(langGroup, &QActionGroup::triggered, this, &RecordWindow::languageChange);
-
-    // initialize language using the default locale
-//    QString defaultLocale = "en";
-//    if(defaultLocale == "de")
-//    {
-//        ui->actionDeutsch->setChecked(true);
-//        emit langGroup->triggered(ui->actionDeutsch);
-//    }
-//    else if(defaultLocale == "en")
-//    {
-//        ui->actionEnglish->setChecked(true);
-//        emit langGroup->triggered(ui->actionEnglish);
-//    }
-
-    ui->retranslateUi(this);
+    setTopevel(true);
+    freezeWindow(true);
 }
 
 RecordWindow::~RecordWindow()
 {
+    delete m_pProxymodel1;
+    delete m_pProxymodel2;
+    delete m_pFilemodel1;
+    delete m_pFilemodel2;
     delete ui;
 }
 
 void RecordWindow::set_videoName()
 {
     // get the newest video file
-    mo_savePath1.setFilter(QDir::Files | QDir::NoSymLinks);
-    mo_savePath1.setNameFilters(QStringList(ml_videoContainer1));
-    mo_savePath1.setSorting(QDir::Time);
+    m_oSavePath1.setFilter(QDir::Files | QDir::NoSymLinks);
+    m_oSavePath1.setNameFilters(QStringList(m_slVideoContainer1));
+    m_oSavePath1.setSorting(QDir::Time);
 
-    QStringList fileList = mo_savePath1.entryList();
+    QStringList fileList = m_oSavePath1.entryList();
     if(fileList.isEmpty())
     {
         MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                 tr("Keine abspielbare Datei gefunden!\nBitte kontrollieren Sie den Pfad!"));
-        ms_videoFile = "";
+                                 tr("No playable file found!\nPlease check the path!"));
+        m_sVideoFile = "";
         return;
     }
 
@@ -141,76 +133,24 @@ void RecordWindow::set_videoName()
     {
         fightnr = ui->lineEdit_fightNr->text();
     }
+
     ui->lineEdit_fightNr->setText(fightnr);
 
     // find the number of the files with the fight number
     QStringList nameFilter2;
     nameFilter2 << (fightnr + "*");
-    mo_savePath1.setNameFilters(nameFilter2);
+    m_oSavePath1.setNameFilters(nameFilter2);
 
     // increment counter if a file with the name already exists
-    mi_ivrCounter = mo_savePath1.entryList().size() + 1;
-
-    ms_videoFile = (fightnr + "." + QString::number(mi_ivrCounter) + videoFormat.toString());
-    mo_savePath1.rename(oldName, ms_videoFile);
-}
-
-void RecordWindow::loadLanguage(const QString &language)
-{
-    if(m_currentLanguage != language)
-    {
-        m_currentLanguage = language;
-        QLocale locale = QLocale(m_currentLanguage);
-        QLocale::setDefault(locale);
-
-        switchTranslator(m_translatorApp, QString("translation_%1.qm").arg(language));
-//        switchTranslator(m_translatorQt, QString("designer_%1.qm").arg(language));
-    }
-}
-
-void RecordWindow::switchTranslator(QTranslator &translator, const QString &filename)
-{
-    qApp->removeTranslator(&translator);
-
-    if(translator.load(filename, m_dirLanguage))
-        qApp->installTranslator(&translator);
-}
-
-void RecordWindow::changeEvent(QEvent *event)
-{
-    // not empty
-    if(event != nullptr)
-    {
-        switch(event->type())
-        {
-        // retranslate Ui
-        case QEvent::LanguageChange:
-            ui->retranslateUi(this);
-            break;
-
-        // load new language after locale change (simulated)
-        case QEvent::LocaleChange:
-            QString locale = QLocale::system().name();
-            locale.truncate(locale.lastIndexOf('_'));
-            loadLanguage(locale);
-            break;
-        }
-    }
-
-    // call the changeEvent of the MainWindow
-    QMainWindow::changeEvent(event);
-}
-
-void RecordWindow::languageChange(QAction *action)
-{
-    if(action != nullptr)
-        loadLanguage(action->data().toString());
+    m_nIvrCounter = m_oSavePath1.entryList().size() + 1;
+    m_sVideoFile = (fightnr + "." + QString::number(m_nIvrCounter) + videoFormat.toString());
+    m_oSavePath1.rename(oldName, m_sVideoFile);
 }
 
 void RecordWindow::openSettings()
 { 
     SettingDialog dialog;
-    dialog.setWindowTitle(tr("Einstellungen"));
+    dialog.setWindowTitle(tr("Settings"));
     dialog.setWindowIcon(QIcon(ICON_LOGO));
     dialog.resize(dialog.height(), dialog.height());
     bool ok = dialog.exec();
@@ -218,193 +158,169 @@ void RecordWindow::openSettings()
     if(!ok)
     {
         MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                 tr("Einstellungen konnten nicht geladen werden!"));
+                                 tr("Settings couldn't be loaded!"));
         return;
     }
 
     SettingDialog::IVR_Settings settings = dialog.Settings();
 
     // get IVR variables
-//    mp_PlayerWindow    = settings.videoPlayer;
-    mi_numCams         = settings.numberCams;
+    m_nNumCams          = settings.numberCams;
+    m_oSavePath1        = QDir(settings.videoPath1);
+    m_slVideoContainer1 = settings.videoContainer1;
 
-    mo_savePath1       = QDir(settings.videoPath1);
-    ml_videoContainer1 = settings.videoContainer1;
-
-    if(mi_numCams == 2)
+    if(m_nNumCams == 2)
     {
-        mo_savePath2       = QDir(settings.videoPath2);
-        ml_videoContainer2 = settings.videoContainer2;
+        m_oSavePath2        = QDir(settings.videoPath2);
+        m_slVideoContainer2 = settings.videoContainer2;
     }
 
     // streamer variables
-    mb_useStreamer    = settings.useStreamer;
+    m_nUseStreamer = settings.useStreamer;
 
-    if(mb_useStreamer)
+    if(m_nUseStreamer == Qt::Checked)
     {
-//        mp_StreamerWindow = settings.videoStreamer;
-        ms_hotkeyStart    = settings.hotkeyStart;
-        ms_hotkeyStop     = settings.hotkeyStop;
+        m_cHotkeyStart = settings.hotkeyStart;
+        m_cHotkeyStop  = settings.hotkeyStop;
     }
 
     // setting the displayed folder to the video folder
-    mp_filemodel1->setRootPath(mo_savePath1.absolutePath());
-    ui->treeView_folder->setRootIndex(mp_proxymodel1->mapFromSource(mp_filemodel1->index(mo_savePath1.absolutePath())));
-    mp_filemodel1->setNameFilters(QStringList(ml_videoContainer1));
-    ui->treeView_folder->setColumnWidth(0, 150);
+    m_pFilemodel1->setRootPath(m_oSavePath1.absolutePath());
+    ui->treeView_folder->setRootIndex(m_pProxymodel1->mapFromSource(m_pFilemodel1->index(m_oSavePath1.absolutePath())));
+    m_pFilemodel1->setNameFilters(QStringList(m_slVideoContainer1));
+    ui->treeView_folder->setColumnWidth(0, 50);
 
-    if(mi_numCams == 2)
+    if(m_nNumCams == 2)
     {
         // setting the displayed folder to the video folder
-        mp_filemodel2->setRootPath(mo_savePath2.absolutePath());
-        ui->treeView_folder2->setRootIndex(mp_proxymodel2->mapFromSource(mp_filemodel2->index(mo_savePath2.absolutePath())));
-        mp_filemodel2->setNameFilters(QStringList(ml_videoContainer2));
-        ui->treeView_folder2->setColumnWidth(0, 150);
+        m_pFilemodel2->setRootPath(m_oSavePath2.absolutePath());
+        ui->treeView_folder2->setRootIndex(m_pProxymodel2->mapFromSource(m_pFilemodel2->index(m_oSavePath2.absolutePath())));
+        m_pFilemodel2->setNameFilters(QStringList(m_slVideoContainer2));
+        ui->treeView_folder2->setColumnWidth(0, 50);
     }
 
-    ui->tabWidget->setTabEnabled(1, mi_numCams == 2);
-    ui->frame_recording->setEnabled(mb_useStreamer);
+    ui->tabWidget->setTabEnabled(1, m_nNumCams == 2);
+    ui->pushButton_record->setEnabled(m_nUseStreamer == Qt::Checked);
 
     // get window handle from name
-    ms_videoStreamer = settings.videoStreamerName;
-    ms_videoPlayer = settings.videoPlayerName;
-    mp_StreamerWindow = FindWindowA(nullptr, ms_videoStreamer.toStdString().c_str());
-    mp_PlayerWindow = FindWindowA(nullptr, ms_videoPlayer.toStdString().c_str());
+    m_sVideoStreamer  = settings.videoStreamerName;
+    m_pStreamerWindow = FindWindowA(nullptr, m_sVideoStreamer.toStdString().c_str());
+    m_pPlayerWindow   = FindWindowA(nullptr, m_sVideoPlayer.toStdString().c_str());
 }
 
-void RecordWindow::freezeWindow(bool set)
+void RecordWindow::freezeWindow(bool i_bMode)
 {
-    setWindowFlag(Qt::FramelessWindowHint, set);
+    setWindowFlag(Qt::FramelessWindowHint, i_bMode);
     show();
-    ui->actionFreeze->setChecked(set);
-    ui->actionSet_Toplevel->setEnabled(!set);
+    ui->actionFreeze->setChecked(i_bMode);
+    ui->actionSet_Toplevel->setEnabled(!i_bMode);
 }
 
-void RecordWindow::setTopevel(bool set)
+void RecordWindow::setTopevel(bool i_bMode)
 {
-    setWindowFlag(Qt::WindowStaysOnTopHint, set);
+    setWindowFlag(Qt::WindowStaysOnTopHint, i_bMode);
     show();
-    ui->actionSet_Toplevel->setChecked(set);
+    ui->actionSet_Toplevel->setChecked(i_bMode);
 }
 
 void RecordWindow::startstopRecord()
 {
-    if(mp_PlayerWindow == nullptr)
+    if(!IsWindow(m_pStreamerWindow) || m_pStreamerWindow == NULL)
     {
-        if(mb_recording)
-        {
-             MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                      tr("Aufnahme konnte nicht gestoppt werden!\nBitte kontrollieren Sie die Einstellungen!"));
-        }
-        else
-        {
-             MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                      tr("Aufnahme konnte nicht gestartet werden!\nBitte kontrollieren Sie die Einstellungen!"));
-        }
+         m_pStreamerWindow = FindWindowA(nullptr, m_sVideoStreamer.toStdString().c_str());
+         if(m_pStreamerWindow == NULL)
+         {
+             if(m_bRecording)
+             {
+                  MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                           tr("Recording couldn't be stopped!\nPlease check the settings!"));
+             }
+             else
+             {
+                  MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
+                                           tr("Recording couldn't be stopped!\nPlease check the settings!"));
+             }
 
-        return;
+             return;
+         }
     }
 
-//    SetFocus(mp_StreamerWindow);
+    SetFocus(m_pStreamerWindow);
 
-    if(mb_recording)
+    if(m_bRecording)
     {
+        SendMessageA(m_pStreamerWindow, WM_KEYDOWN, m_cHotkeyStop, 0);
+        SendMessageA(m_pStreamerWindow, WM_KEYUP, m_cHotkeyStop, 0);
 
-        PostMessageA(mp_StreamerWindow, WM_KEYDOWN, 'S', 0);
-        PostMessageA(mp_StreamerWindow, WM_KEYUP, 'S', 0);
-//        SendMessageA(mp_StreamerWindow, WM_KEYDOWN, int('S'), 0);
-//        SendMessageA(mp_StreamerWindow, WM_KEYUP, int('S'), 0);
+        ui->pushButton_record->setIcon(QIcon(":/icons/icons/record2.svg"));
+        m_bRecording = false;
 
-        ui->button_record->setText(tr("Starten"));
-        ui->label_record->setEnabled(false);
-        ui->frame_replay->setEnabled(true);
-        mb_recording = false;
-
-        if(mb_useStreamer)
+        if(m_nUseStreamer == Qt::Checked)
         {
             Sleep(uint(1000));
             set_videoName();
+            Sleep(uint(1000));
+            startstopVideo();
         }
     }
     else
     {
-        PostMessageA(mp_StreamerWindow, WM_KEYDOWN, 'S', 0);
-        PostMessageA(mp_StreamerWindow, WM_KEYUP, 'S', 0);
-//        SendMessageA(mp_StreamerWindow, WM_KEYDOWN, int('S'), 0);
-//        SendMessageA(mp_StreamerWindow, WM_KEYUP, int('S'), 0);
+        SendMessageA(m_pStreamerWindow, WM_KEYDOWN, m_cHotkeyStart, 0);
+        SendMessageA(m_pStreamerWindow, WM_KEYUP, m_cHotkeyStart, 0);
 
-        ui->button_record->setText(tr("Stoppen"));
-        ui->label_record->setEnabled(true);
-        ui->frame_replay->setEnabled(false);
-        mb_recording = true;
+        ui->pushButton_record->setIcon(QIcon(":/icons/icons/record.svg"));
+        m_bRecording = true;
     }
 }
 
-void RecordWindow::startVideo()
+void RecordWindow::startstopVideo()
 {
-    if(mo_savePath1 == QDir(""))
+    if(m_oSavePath1 == QDir(""))
     {
         MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                 tr("Wiedergabe konnte nicht gestartet werden!\nBitte kontrollieren Sie die Einstellungen und starten Sie die Wiedergabe manuell!"));
+                                 tr("Playback couldn't be started!\nPlease check the settings and restart the playback!"));
         return;
     }
 
-    if(!ms_videoFile.isEmpty())
+    if(!m_sVideoFile.isEmpty())
     {
-        QDesktopServices::openUrl(QUrl(mo_savePath1.absoluteFilePath(ms_videoFile), QUrl::TolerantMode));
+        QDesktopServices::openUrl(QUrl(m_oSavePath1.absoluteFilePath(m_sVideoFile), QUrl::TolerantMode));
     }
     else
     {
         MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                 tr("Wiedergabe konnte nicht gestartet werden!\nKein aufgenommenes Video gefunden!"));
+                                 tr("Playback couldn't be started!\nNo recorded video found!"));
     }
 }
 
-void RecordWindow::stopVideo()
+void RecordWindow::openVideo1(const QModelIndex &i_index)
 {
-    if(mp_PlayerWindow == nullptr)
-    {
-        MessagePrinter::ErrorBox(WINDOW_TITLE, ICON_LOGO,
-                                 tr("Wiedergabe konnte nicht gestoppt werden!\nBitte kontrollieren Sie die Einstellungen und stoppen Sie die Wiedergabe manuell!"));
-        return;
-    }
-
-//    SetForegroundWindow(mp_PlayerWindow);
-//    keybd_event(VK_F4, 0, 0, 0);
-//    keybd_event(VK_F4, 0, WM_KEYUP, 0);
-
-    PostMessageA(mp_PlayerWindow, WM_KEYDOWN, VK_F4, 0);
-    PostMessageA(mp_PlayerWindow, WM_KEYUP, VK_F4, 0);
+    QModelIndex indexSource = m_pProxymodel1->mapToSource(i_index);
+    QDesktopServices::openUrl(QUrl::fromLocalFile(m_pFilemodel1->filePath(indexSource)));
 }
 
-void RecordWindow::openVideo1(const QModelIndex &index)
+void RecordWindow::openVideo2(const QModelIndex &i_index)
 {
-    QModelIndex indexSource = mp_proxymodel1->mapToSource(index);
-    QDesktopServices::openUrl(QUrl::fromLocalFile(mp_filemodel1->filePath(indexSource)));
+    QModelIndex indexSource = m_pProxymodel2->mapToSource(i_index);
+    QDesktopServices::openUrl(QUrl::fromLocalFile(m_pFilemodel2->filePath(indexSource)));
 }
 
-void RecordWindow::openVideo2(const QModelIndex &index)
-{
-    QModelIndex indexSource = mp_proxymodel2->mapToSource(index);
-    QDesktopServices::openUrl(QUrl::fromLocalFile(mp_filemodel2->filePath(indexSource)));
-}
-
-void RecordWindow::renameVideo(int cam)
+void RecordWindow::renameVideo(const int i_nCamera)
 {
     QString oldName;
     QDir savePath;
 
-    if(cam == 1)
+    if(i_nCamera == 1)
     {
-        QModelIndex indexSource = mp_proxymodel1->mapToSource(ui->treeView_folder->currentIndex());
-        savePath = mo_savePath1;
-        oldName = mp_filemodel1->filePath(indexSource);
+        QModelIndex indexSource = m_pProxymodel1->mapToSource(ui->treeView_folder->currentIndex());
+        savePath = m_oSavePath1;
+        oldName  = m_pFilemodel1->filePath(indexSource);
     }
-    else if(cam == 2)
+    else if(i_nCamera == 2)
     {
-        QModelIndex indexSource = mp_proxymodel2->mapToSource(ui->treeView_folder2->currentIndex());
-        savePath = mo_savePath2;
-        oldName = mp_filemodel2->filePath(indexSource);
+        QModelIndex indexSource = m_pProxymodel2->mapToSource(ui->treeView_folder2->currentIndex());
+        savePath = m_oSavePath2;
+        oldName  = m_pFilemodel2->filePath(indexSource);
     }
 
     int index = oldName.lastIndexOf('.');
@@ -426,9 +342,24 @@ void RecordWindow::renameVideo(int cam)
     savePath.setNameFilters(nameFilter2);
 
     // increment counter if a file with the name already exists
-    mi_ivrCounter = savePath.entryList().size() + 1;
+    m_nIvrCounter = savePath.entryList().size() + 1;
+    m_sVideoFile = (fightnr + "." + QString::number(m_nIvrCounter) + videoFormat.toString());
+    savePath.rename(oldName, m_sVideoFile);
+}
 
-    ms_videoFile = (fightnr + "." + QString::number(mi_ivrCounter) + videoFormat.toString());
-    savePath.rename(oldName, ms_videoFile);
+void RecordWindow::showHideFolder()
+{
+    if(m_bShowFolder)
+    {
+
+        ui->tabWidget->setVisible(false);
+        m_bShowFolder = false;
+        this->resize(100, 200);
+    }
+    else
+    {
+        ui->tabWidget->setVisible(true);
+        m_bShowFolder = true;
+    }
 }
 
